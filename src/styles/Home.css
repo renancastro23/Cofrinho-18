@@ -1,16 +1,17 @@
-.home {
+/* ===== Layout base ===== */
+.home-feed {
   min-height: 100dvh;
   background: #fff;
   display: grid;
-  grid-template-rows: auto 1fr auto auto;
+  grid-template-rows: auto 1fr auto;
 }
 
-/* Topbar */
-.home-topbar {
+/* ===== Topbar ===== */
+.feed-topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: .9rem 1rem;
+  padding: 1rem 1.25rem;
 }
 .brand { display: flex; align-items: center; gap: .6rem; }
 .logo {
@@ -19,84 +20,116 @@
   box-shadow: 0 6px 16px rgba(0,100,217,.25);
   font-size: 1.2rem;
 }
-.name { font-weight: 700; color: #0064d9; font-size: 1.05rem; }
+.name { font-weight: 700; color: #0064d9; font-size: 1.08rem; }
 
-/* Botões base (seguindo o tema) */
+/* ===== Botões ===== */
 .btn {
   border: none; cursor: pointer; font: inherit; border-radius: 999px;
-  padding: .6rem 1.05rem; transition: transform .05s ease, box-shadow .2s ease;
+  padding: .68rem 1.1rem;
+  transition: transform .05s ease, box-shadow .2s ease, opacity .2s ease;
 }
-.btn:focus { outline: none; }
 .btn:hover { transform: translateY(-1px); }
-
-/* Variações */
-.btn.primary { background: #F17e00; color: #fff; box-shadow: 0 8px 22px rgba(241,126,0,.25); }
+.btn.primary { background: #F17e00; color: #fff; box-shadow: 0 10px 24px rgba(241,126,0,.25); }
 .btn.ghost   { background: transparent; color: #0064d9; border: 1px solid #cfe0ff; }
 .btn.outline { background: transparent; color: #0064d9; border: 1px solid #cfe0ff; }
-.btn.big     { padding: .8rem 1.3rem; }
+.btn.big     { padding: .9rem 1.35rem; }
 
-/* Hero */
-.hero {
-  display: grid; gap: 1.2rem; padding: 1rem;
-  grid-template-columns: 1.05fr .95fr;
-  align-items: center;
+/* ===== Blocos (sem borda, mais largos) ===== */
+.feed-block {
+  width: min(1080px, 94vw);
+  margin: 0 auto;
+  padding: 2.2rem 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
-.hero-text h1 {
-  margin: 0 0 .5rem 0;
-  font-size: clamp(1.8rem, 2.8vw, 2.6rem);
-  line-height: 1.15;
-}
-.hero-text .highlight { color: #0064d9; }
-.subtitle { color: #445; max-width: 48ch; margin: 0 0 .9rem 0; }
-.cta-row { display: flex; gap: .6rem; flex-wrap: wrap; }
+.feed-block + .feed-block { margin-top: 1.2rem; }
 
-/* Arte do hero (porquinho + nível) */
-.hero-art { display: grid; place-items: center; }
-.pig-spot {
-  background: linear-gradient(180deg, #f9fbff 0%, #eef5ff 100%);
-  border: 1px solid #e3ecfb; border-radius: 16px; padding: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,.06); width: 100%; max-width: 420px;
+/* ===== HERO ===== */
+.feed-block.hero {
+  text-align: center;               /* base do hero centralizada */
+  padding: 3.5rem 0 2.8rem;
+  position: relative;
 }
-.pig-circle {
-  width: 110px; height: 110px; border-radius: 50%;
-  background: #0064d9; color: #fff; display: grid; place-items: center;
-  margin: 0 auto .8rem; font-size: 2rem;
-  box-shadow: 0 14px 28px rgba(0,100,217,.22);
+
+.hero-title {
+  margin: 0 0 .6rem 0;
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-align: center;               /* garante o título centralizado */
 }
-.level { text-align: center; }
+
+.highlight { color: #0064d9; }
+
+/* 🔧 FIX: subtítulo 100% centralizado e alinhado ao título */
+.hero-subtitle,
+.feed-block.hero .hero-subtitle,
+.feed-block.hero .subtitle {        /* fallback caso o className esteja "subtitle" */
+  color: #445;
+  margin: 0 auto 1.2rem;
+  max-width: 70ch;
+  font-size: 1.1rem;
+  text-align: center;               /* regra específica, vence .feed-block p */
+}
+
+/* Se houver qualquer regra global afetando <p>, centralizamos tudo que estiver dentro do hero */
+.feed-block.hero p { text-align: center; }
+
+.level-box { margin: .8rem auto 1.3rem; max-width: 560px; }
 .bar {
   background: #e6edf7; height: 16px; border-radius: 999px; overflow: hidden;
-  border: 1px solid #d2e2ff; margin: 0 auto .35rem; max-width: 340px;
+  border: 1px solid #d2e2ff; margin-bottom: .45rem;
 }
 .fill { height: 100%; background: #F17e00; transition: width .6s ease; }
 
-/* Benefícios */
-.benefits {
-  display: grid; gap: 1rem; padding: 1rem;
-  grid-template-columns: repeat(3, 1fr);
-}
-.card {
-  background: #f9fbff; border: 1px solid #e3ecfb; border-radius: 16px;
-  padding: 1rem; box-shadow: 0 6px 18px rgba(0,0,0,.05);
-}
-.card .icon { font-size: 1.4rem; }
-.card h3 { margin: .4rem 0 .25rem 0; color: #0b2a52; }
-
-/* CTA final */
-.cta-final {
-  text-align: center; padding: 1.25rem; margin: .25rem 1rem 1rem;
-  background: linear-gradient(180deg, #fff 0%, #f9fbff 100%);
-  border: 1px solid #e3ecfb; border-radius: 16px;
-}
-.cta-final h2 { margin: 0 0 .25rem 0; color: #0064d9; }
-
-/* Rodapé */
-.home-footer {
-  padding: 1rem; text-align: center; color: #667; font-size: .9rem;
+.cta-row {
+  display: flex; gap: .7rem; justify-content: center; flex-wrap: wrap;
 }
 
-/* Responsivo */
-@media (max-width: 980px) {
-  .hero { grid-template-columns: 1fr; }
-  .benefits { grid-template-columns: 1fr; }
+/* ===== Texto das seções ===== */
+.feed-block h2 {
+  margin: 0 0 .6rem 0;
+  color: #0b2a52;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: -0.01em;
+}
+.feed-block p {
+  margin: .65rem 0;
+  color: #223;
+  line-height: 1.68;
+  font-size: 1.08rem;
+}
+.muted { color: #667; }
+
+/* ===== Imagens (sem borda, com sombra clean) ===== */
+.media-figure { margin: 1.1rem 0 0; }
+.img-cover {
+  width: 100%; height: auto; display: block; border-radius: 18px;
+  border: none;
+  box-shadow: 0 18px 40px rgba(0,0,0,.08);
+}
+.media-figure figcaption {
+  text-align: center; color: #667; font-size: .92rem; margin-top: .45rem;
+}
+
+/* ===== CTA final ===== */
+.feed-block.cta { text-align: center; padding-bottom: 2.5rem; }
+
+/* ===== Rodapé ===== */
+.feed-footer {
+  padding: 1.2rem;
+  text-align: center;
+  color: #667;
+  font-size: .93rem;
+}
+
+/* ===== Animação de reveal ===== */
+.reveal { opacity: 0; transform: translateY(18px); transition: all .6s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ===== Responsivo ===== */
+@media (max-width: 640px) {
+  .feed-block { width: 94vw; padding: 1.6rem 0; }
+  .hero-title { font-size: clamp(1.9rem, 6vw, 2.4rem); }
 }
