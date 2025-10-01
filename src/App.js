@@ -1,6 +1,7 @@
 // src/App.js
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import ContatoPublico from "./pages/ContatoPublico";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -77,6 +78,7 @@ export default function App() {
           {/* Públicas */}
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/contato-publico" element={<ContatoPublico />} /> 
 
           {/* Protegidas */}
           <Route path="/principal" element={<Protected isAuth={isAuth}><Principal /></Protected>} />

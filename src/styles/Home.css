@@ -29,10 +29,10 @@
   transition: transform .05s ease, box-shadow .2s ease, opacity .2s ease;
 }
 .btn:hover { transform: translateY(-1px); }
-.btn.primary { background: #F17e00; color: #fff; box-shadow: 0 10px 24px rgba(241,126,0,.25); }
+.btn.primary { background: #F17e00; color: #fff; box-shadow: 0 10px 24px rgba(241,126,0,.25); align:center;}
 .btn.ghost   { background: transparent; color: #0064d9; border: 1px solid #cfe0ff; }
 .btn.outline { background: transparent; color: #0064d9; border: 1px solid #cfe0ff; }
-.btn.big     { padding: .9rem 1.35rem; }
+.btn.big     { padding: .9rem 1.35rem;}
 
 /* ===== Blocos (sem borda, mais largos) ===== */
 .feed-block {
@@ -93,6 +93,7 @@
   color: #0b2a52;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   letter-spacing: -0.01em;
+  text-align: center;
 }
 .feed-block p {
   margin: .65rem 0;
@@ -100,12 +101,13 @@
   line-height: 1.68;
   font-size: 1.08rem;
 }
-.muted { color: #667; }
+.muted { color: #667;align: center; }
 
 /* ===== Imagens (sem borda, com sombra clean) ===== */
-.media-figure { margin: 1.1rem 0 0; }
+
+.media-figure { margin: 1.1rem 0 0;}
 .img-cover {
-  width: 100%; height: auto; display: block; border-radius: 18px;
+  width: 100%; height: auto; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; border-radius: 18px;
   border: none;
   box-shadow: 0 18px 40px rgba(0,0,0,.08);
 }
@@ -132,4 +134,46 @@
 @media (max-width: 640px) {
   .feed-block { width: 94vw; padding: 1.6rem 0; }
   .hero-title { font-size: clamp(1.9rem, 6vw, 2.4rem); }
+}
+
+/* ===== Grid de imagens lado a lado ===== */
+.image-grid {
+  display: grid;
+  gap: 1rem;                               /* espaço entre as imagens */
+  grid-template-columns: repeat(3, 1fr);   /* 3 colunas no desktop */
+  align-items: start;
+}
+
+/* Quebras responsivas */
+@media (max-width: 1100px) {
+  .image-grid { grid-template-columns: repeat(2, 1fr); } /* 2 colunas */
+}
+@media (max-width: 640px) {
+  .image-grid { grid-template-columns: 1fr; }           /* 1 coluna */
+}
+
+/* Garantias contra estilos antigos que forçam largura total */
+.image-grid .media-figure {
+  margin: 0;
+  width: auto;           /* evita width:100% herdado de algum lugar */
+}
+.image-grid .img-cover {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+.image-grid figcaption {
+  text-align: center;
+  margin-top: .4rem;
+  color: #667;
+  font-size: .92rem;
+}
+
+#oque-e .img-cover {
+  max-width: 440px;  /* tamanho máximo no desktop */
+  width: 100%;       /* ainda responsivo */
+  height: auto;
+  margin: 0 auto;    /* centraliza */
+  display: block;
 }
