@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/MainContent.css";
+import porquinhokids from "../assets/principal/porquinho-kids.jpg";
 
 const feedItems = [
   { type: "desafio", text: "Desafio: Economize 10% essa semana" },
@@ -25,7 +26,7 @@ const Principal = () => {
 
       {/* CENTRO - maior */}
       <section className="column center">
-        <img className="pig" src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Porquinho" />
+        <img className="pig" src= {porquinhokids} alt="Porquinho" />
         <div className="progress-bar" aria-label="Nível">
           <div className="progress" style={{ width: "60%" }} />
         </div>
