@@ -1,0 +1,104 @@
+:root {
+  --azul-claro: #eaf2ff;
+  --azul-escuro: #1f3360;
+  --azul: #0064d9;
+  --laranja: #f17e00;
+  --texto: #0b2042;
+}
+
+/* ===== Estrutura geral ===== */
+.quem-container {
+  background: linear-gradient(to bottom, var(--azul-claro), #ffffff);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 3rem 2rem;
+  flex-wrap: wrap;
+}
+
+/* ===== Card principal ===== */
+.quem-card {
+  background: var(--azul-claro);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  max-width: 750px;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ===== Cabeçalho ===== */
+.quem-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.quem-logo {
+  height: 60px;
+  width: auto;
+  margin-bottom: 0.5rem;
+}
+
+.quem-titulo {
+  color: var(--azul-escuro);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* ===== Conteúdo ===== */
+.quem-conteudo {
+  background: #cfe2ff;
+  color: var(--azul-escuro);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  line-height: 1.6;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.quem-img {
+  height: 120px;
+  width: auto;
+  margin-bottom: 1rem;
+}
+
+/* ===== Dica lateral ===== */
+.dica-card {
+  background: var(--laranja);
+  color: #fff;
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
+  max-width: 250px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  align-self: flex-start;
+}
+
+.dica-card h2 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.dica-card p {
+  margin: 0.8rem 0 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 900px) {
+  .quem-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .quem-card {
+    max-width: 90%;
+  }
+
+  .dica-card {
+    max-width: 90%;
+  }
+}

@@ -1,91 +1,90 @@
 import React, { useState } from "react";
-import "../styles/Pages.css";
+import "../styles/Contato.css";
 
-const Contato = () => {
-  const [form, setForm] = useState({ nome: "", email: "", mensagem: "" });
-  const [status, setStatus] = useState(null);
+function Contato() {
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    assunto: "",
+    mensagem: "",
+  });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // validação simples
-    if (!form.nome.trim() || !form.email.trim() || !form.mensagem.trim()) {
-      setStatus({ type: "error", msg: "Preencha todos os campos." });
-      return;
-    }
-    const emailOk = /\S+@\S+\.\S+/.test(form.email);
-    if (!emailOk) {
-      setStatus({ type: "error", msg: "Informe um e-mail válido." });
-      return;
-    }
-
-    // aqui você chamaria sua API (fetch/axios). Por ora só simula sucesso:
-    setStatus({ type: "success", msg: "Mensagem enviada! Em breve entraremos em contato." });
-    setForm({ nome: "", email: "", mensagem: "" });
+    alert("Mensagem enviada com sucesso!");
+    setFormData({ nome: "", email: "", assunto: "", mensagem: "" });
   };
 
   return (
-    <main className="page">
-      <section className="card">
-        <h1 className="title">Contato</h1>
-        <p>Tem dúvidas, sugestões ou quer falar com a gente? Envie sua mensagem:</p>
+    <div className="contato-container">
+      <div className="contato-card">
+        <img
+          src="/assets/logo.png" // substitua pelo logo do Seu Porquinho
+          alt="Logo Seu Porquinho"
+          className="contato-logo"
+        />
 
-        <form className="form" onSubmit={handleSubmit} noValidate>
-          <div className="field">
-            <label htmlFor="nome">Nome</label>
-            <input
-              id="nome"
-              name="nome"
-              type="text"
-              value={form.nome}
-              onChange={handleChange}
-              placeholder="Seu nome"
-              required
-            />
-          </div>
+        <h1 className="contato-titulo">
+          📣 Entre em contato com nossa equipe!
+        </h1>
 
-          <div className="field">
-            <label htmlFor="email">E-mail</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="voce@exemplo.com"
-              required
-            />
-          </div>
+        <form className="contato-form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="nome"
+            placeholder="Nome completo"
+            value={formData.nome}
+            onChange={handleChange}
+            required
+          />
 
-          <div className="field">
-            <label htmlFor="mensagem">Mensagem</label>
-            <textarea
-              id="mensagem"
-              name="mensagem"
-              rows="5"
-              value={form.mensagem}
-              onChange={handleChange}
-              placeholder="Escreva sua mensagem..."
-              required
-            />
-          </div>
+          <input
+            type="email"
+            name="email"
+            placeholder="E-mail"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
 
-          <button className="btn" type="submit">Enviar</button>
+          <input
+            type="text"
+            name="assunto"
+            placeholder="Assunto"
+            value={formData.assunto}
+            onChange={handleChange}
+          />
 
-          {status && (
-            <div className={`alert ${status.type}`}>
-              {status.msg}
-            </div>
-          )}
+          <textarea
+            name="mensagem"
+            placeholder="Mensagem"
+            rows="4"
+            value={formData.mensagem}
+            onChange={handleChange}
+            required
+          ></textarea>
+
+          <button type="submit" className="contato-botao">
+            Enviar mensagem →
+          </button>
         </form>
-      </section>
-    </main>
+
+        <p className="contato-info">
+          Responderemos o mais rápido possível. Obrigado por fazer parte do{" "}
+          <strong>Seu Porquinho!</strong>
+        </p>
+      </div>
+
+      <div className="dica-card">
+        <h2>Dica do Dia</h2>
+        <p>💬 Sua opinião nos ajuda a crescer!</p>
+      </div>
+    </div>
   );
-};
+}
 
 export default Contato;

@@ -1,58 +1,66 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import "../styles/Login.css";
 
-const Login = () => {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", senha: "" });
-  const [status, setStatus] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setStatus(null);
-
-    const emailOk = /\S+@\S+\.\S+/.test(form.email);
-    if (!emailOk) return setStatus({ type: "error", msg: "Informe um e-mail válido." });
-    if (!form.senha.trim()) return setStatus({ type: "error", msg: "Informe sua senha." });
-
-    setLoading(true);
-
-    setTimeout(() => {
-      localStorage.setItem("auth", "true");
-      window.dispatchEvent(new Event("auth-changed")); // 🔹 avisa o App
-
-      setLoading(false);
-      navigate("/principal", { replace: true });
-    }, 500);
-  };
-
+function Login() {
   return (
-    <main className="login-wrap">
-      <section className="login-card">
-        <h1>Login</h1>
-        <form className="login-form" onSubmit={onSubmit}>
-          <div className="field">
-            <label>E-mail</label>
-            <input name="email" type="email" value={form.email} onChange={onChange} />
+    <div className="login-container">
+      <div className="login-card">
+        <img
+          src="/assets/logo.png" // substitua pelo logo do Seu Porquinho
+          alt="Logo Seu Porquinho"
+          className="login-logo"
+        />
+
+        <h1 className="login-title">Bem-vindo de volta!</h1>
+
+        <form className="login-form">
+          <div className="form-group">
+            <label htmlFor="email" className="visually-hidden">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="E-mail"
+              className="login-input"
+            />
           </div>
-          <div className="field">
-            <label>Senha</label>
-            <input name="senha" type="password" value={form.senha} onChange={onChange} />
+
+          <div className="form-group">
+            <label htmlFor="senha" className="visually-hidden">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Senha"
+              className="login-input"
+            />
           </div>
-          <button className="btn" type="submit" disabled={loading}>
-            {loading ? "Entrando..." : "Entrar"}
+
+          <div className="remember-me">
+            <input type="checkbox" id="lembrar" />
+            <label htmlFor="lembrar">Lembrar-me</label>
+          </div>
+
+          <button type="submit" className="login-button">
+            Entrar
           </button>
-          {status && <div className={`alert ${status.type}`}>{status.msg}</div>}
+
+          <p className="login-footer">
+            Ainda não tem uma conta?{" "}
+            <a href="#" className="create-account">
+              Crie a sua agora
+            </a>
+          </p>
         </form>
-      </section>
-    </main>
+      </div>
+
+      <img
+        src="/assets/porquinho.png" // imagem do seu porquinho mascote
+        alt="Porquinho mascote"
+        className="login-pig"
+      />
+    </div>
   );
-};
+}
 
 export default Login;
