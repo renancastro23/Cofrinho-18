@@ -1,9 +1,9 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Import das páginas criadas
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Principal from "./pages/Principal";
 import Sobre from "./pages/Sobre";
 import QuemSomos from "./pages/QuemSomos";
 import EditarPerfil from "./pages/EditarPerfil";
@@ -19,6 +19,7 @@ function App() {
 
         {/* Demais páginas */}
         <Route path="/login" element={<Login />} />
+        <Route path="/principal" element={<Principal />} />
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/quemsomos" element={<QuemSomos />} />
         <Route path="/editarperfil" element={<EditarPerfil />} />

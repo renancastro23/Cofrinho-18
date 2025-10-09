@@ -1,5 +1,4 @@
-import React from "react";
-import "../styles/MainContent.css";
+
 import porquinhokids from "../assets/principal/porquinho-kids.jpg";
 
 const feedItems = [

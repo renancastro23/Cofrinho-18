@@ -1,4 +1,3 @@
-import React from "react";
 import "../styles/Home.css";
 import { useNavigate } from "react-router-dom";
 import Porquinho from "../assets/home/porquinho.jpg"
@@ -13,7 +12,7 @@ function Home() {
           <img src= {Porquinho} alt="Logo Seu Porquinho" className="logo" />
           <h2>Seu Porquinho</h2>
         </div>
-        <button className="btn-entrar-topo" onClick={() => navigate("/Login")}>
+        <button className="btn-entrar-topo" onClick={() => navigate("/login") }>
   Entrar
 </button>
 
@@ -30,7 +29,7 @@ function Home() {
             com desafios, níveis e um feed que te acompanha.
           </p>
           <div className="hero-botoes">
-            <button className="btn-laranja" onClick={() => navigate("/ContatoInstitucional")}>
+            <button className="btn-laranja" onClick={() => navigate("/contatoinstitucional") }>
   Começar agora
 </button>
 
@@ -111,7 +110,7 @@ function Home() {
             Sua escola ou instituição também pode participar e ajudar a formar
             jovens mais conscientes!
           </p>
-          <button className="btn-laranja" onClick={() => navigate("/ContatoInstitucional")}>Saiba mais</button>
+          <button className="btn-laranja" onClick={() => navigate("/contatoinstitucional")}>Saiba mais</button>
           <img
             src="/assets/porquinho-tchau.png"
             alt="Porquinho acenando"

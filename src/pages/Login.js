@@ -1,7 +1,36 @@
-import React from "react";
 import "../styles/Login.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const errs = {};
+    if (!email || email.trim() === "") {
+      errs.email = "O e-mail é obrigatório.";
+    } else if (!email.includes("@")) {
+      errs.email = "O e-mail precisa conter @.";
+    }
+
+    if (!senha || senha.trim() === "") {
+      errs.senha = "A senha é obrigatória.";
+    }
+
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    // Se passar na validação, navega para /principal
+    navigate("/principal");
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -13,7 +42,7 @@ function Login() {
 
         <h1 className="login-title">Bem-vindo de volta!</h1>
 
-        <form className="login-form">
+  <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email" className="visually-hidden">E-mail</label>
             <input
@@ -22,7 +51,10 @@ function Login() {
               name="email"
               placeholder="E-mail"
               className="login-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && <div className="field-error">{errors.email}</div>}
           </div>
 
           <div className="form-group">
@@ -33,7 +65,10 @@ function Login() {
               name="senha"
               placeholder="Senha"
               className="login-input"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
             />
+            {errors.senha && <div className="field-error">{errors.senha}</div>}
           </div>
 
           <div className="remember-me">
@@ -41,7 +76,7 @@ function Login() {
             <label htmlFor="lembrar">Lembrar-me</label>
           </div>
 
-          <button type="submit" className="login-button">
+          <button type="submit" className="login-button" >
             Entrar
           </button>
 
