@@ -1,99 +1,69 @@
+import React, { useState } from "react";
 import "../styles/Login.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Logo from "../assets/logo.png"
 
 function Login() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [errors, setErrors] = useState({});
+  const [lembrar, setLembrar] = useState(false);
 
-  const validate = () => {
-    const errs = {};
-    if (!email || email.trim() === "") {
-      errs.email = "O e-mail é obrigatório.";
-    } else if (!email.includes("@")) {
-      errs.email = "O e-mail precisa conter @.";
-    }
-
-    if (!senha || senha.trim() === "") {
-      errs.senha = "A senha é obrigatória.";
-    }
-
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    if (!validate()) return;
-    // Se passar na validação, navega para /principal
-    navigate("/principal");
+    alert(`Login efetuado com o e-mail: ${email}`);
   };
 
   return (
     <div className="login-container">
+      {/* ===== LOGO FORA DO CARD ===== */}
+      <div className="login-logo-area">
+        <img src= {Logo} alt="Logo Seu Porquinho" className="login-logo" />
+      </div>
+
+      {/* ===== CARD DE LOGIN ===== */}
       <div className="login-card">
-        <img
-          src="/assets/logo.png" // substitua pelo logo do Seu Porquinho
-          alt="Logo Seu Porquinho"
-          className="login-logo"
-        />
+        <h1>Bem-vindo de volta!</h1>
 
-        <h1 className="login-title">Bem-vindo de volta!</h1>
-
-  <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email" className="visually-hidden">E-mail</label>
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="input-group">
             <input
               type="email"
-              id="email"
-              name="email"
               placeholder="E-mail"
-              className="login-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
-            {errors.email && <div className="field-error">{errors.email}</div>}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="senha" className="visually-hidden">Senha</label>
+          <div className="input-group">
             <input
               type="password"
-              id="senha"
-              name="senha"
               placeholder="Senha"
-              className="login-input"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
+              required
             />
-            {errors.senha && <div className="field-error">{errors.senha}</div>}
           </div>
 
-          <div className="remember-me">
-            <input type="checkbox" id="lembrar" />
+          <div className="lembrar-me">
+            <input
+              type="checkbox"
+              checked={lembrar}
+              onChange={() => setLembrar(!lembrar)}
+              id="lembrar"
+            />
             <label htmlFor="lembrar">Lembrar-me</label>
           </div>
 
-          <button type="submit" className="login-button" >
+          <button type="submit" className="btn-laranja">
             Entrar
           </button>
-
-          <p className="login-footer">
-            Ainda não tem uma conta?{" "}
-            <a href="#" className="create-account">
-              Crie a sua agora
-            </a>
-          </p>
         </form>
-      </div>
 
-      <img
-        src="/assets/porquinho.png" // imagem do seu porquinho mascote
-        alt="Porquinho mascote"
-        className="login-pig"
-      />
+        <p className="criar-conta">
+          Ainda não tem uma conta?{" "}
+          <a href="/contato">Crie a sua agora</a>
+        </p>
+      </div>
     </div>
   );
 }

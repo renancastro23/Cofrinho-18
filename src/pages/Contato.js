@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "../styles/Contato.css";
+import Logo from "../assets/logo.png"
+
 
 function Contato() {
   const [formData, setFormData] = useState({
@@ -21,18 +23,20 @@ function Contato() {
 
   return (
     <div className="contato-container">
-      <div className="contato-card">
+      {/* ===== LOGO FORA DO CARD ===== */}
+      <div className="contato-logo-area">
         <img
-          src="/assets/logo.png" // substitua pelo logo do Seu Porquinho
+          src= {Logo}
           alt="Logo Seu Porquinho"
           className="contato-logo"
         />
+      </div>
 
-        <h1 className="contato-titulo">
-          📣 Entre em contato com nossa equipe!
-        </h1>
+      {/* ===== CARD DE CONTATO ===== */}
+      <div className="contato-card">
+        <h1>Entre em contato com nossa equipe!</h1>
 
-        <form className="contato-form" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="contato-form">
           <input
             type="text"
             name="nome"
@@ -57,6 +61,7 @@ function Contato() {
             placeholder="Assunto"
             value={formData.assunto}
             onChange={handleChange}
+            required
           />
 
           <textarea
@@ -68,20 +73,15 @@ function Contato() {
             required
           ></textarea>
 
-          <button type="submit" className="contato-botao">
+          <button type="submit" className="btn-laranja">
             Enviar mensagem →
           </button>
         </form>
 
         <p className="contato-info">
           Responderemos o mais rápido possível. Obrigado por fazer parte do{" "}
-          <strong>Seu Porquinho!</strong>
+          <strong>Cofrinho dos 18!</strong>
         </p>
-      </div>
-
-      <div className="dica-card">
-        <h2>Dica do Dia</h2>
-        <p>💬 Sua opinião nos ajuda a crescer!</p>
       </div>
     </div>
   );

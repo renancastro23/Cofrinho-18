@@ -1,130 +1,126 @@
+import React from "react";
 import "../styles/Home.css";
-import { useNavigate } from "react-router-dom";
-import Porquinho from "../assets/home/porquinho.jpg"
+import Dinheiro from "../assets/home/dinheiro.jpg"
+import Ponto from "../assets/home/ponto.jpg"
+import Troca from "../assets/home/troca.jpg"
+import PorqAcenando from "../assets/home/porqAcenando.png"
+import PorqLivro from "../assets/home/porqLivro.png"
+import PorqFeliz from "../assets/home/porqFeliz.png"
+import Logo from "../assets/logo.png"
 
 function Home() {
-  const navigate = useNavigate();
   return (
-    <div className="home-container">
-      {/* ===== CABEÇALHO ===== */}
-      <header className="home-header">
+    <div className="home-wrapper">
+      {/* ===== HEADER ===== */}
+      <header className="header">
         <div className="logo-area">
-          <img src= {Porquinho} alt="Logo Seu Porquinho" className="logo" />
-          <h2>Seu Porquinho</h2>
+          <img src= {Logo} alt="Logo Seu Porquinho" className="logo" />
+          <h1>Cofrinho dos 18</h1>
         </div>
-        <button className="btn-entrar-topo" onClick={() => navigate("/login") }>
-  Entrar
-</button>
 
+        <nav className="nav">
+          <a href="#sobre">Sobre</a>
+          <a href="#funciona">Como Funciona</a>
+          <a href="#institucional">Instituições</a>
+        </nav>
+
+        <div className="nav-buttons">
+          <a href="/login" className="btn-login">Entrar</a>
+          <a href="/login" className="btn-cta">Começar agora</a>
+        </div>
       </header>
 
-      {/* ===== SEÇÃO HERO ===== */}
+      {/* ===== HERO SECTION ===== */}
       <section className="hero">
-        <div className="hero-texto">
-          <h1>
-            Bem-vindo ao <span className="destaque">Cofrinho dos 18</span>
-          </h1>
+        <div className="hero-content">
+          <h2>Educação financeira e reciclagem de um jeito divertido</h2>
           <p>
-            Educação financeira e reciclagem unidas em uma jornada gamificada —
-            com desafios, níveis e um feed que te acompanha.
+            O Cofrinho dos 18 une sustentabilidade e aprendizado financeiro em uma
+            jornada gamificada — com desafios, níveis e recompensas reais.
           </p>
-          <div className="hero-botoes">
-            <button className="btn-laranja" onClick={() => navigate("/contatoinstitucional") }>
-  Começar agora
-</button>
-
-            <button className="btn-branco" onClick={() => navigate("/Login")}>
-  Entrar
-</button>
-
+          <div className="hero-actions">
+            <a href="/login" className="btn-cta grande">Começar agora</a>
           </div>
         </div>
 
-        <div className="hero-imagem">
-          <img src="/assets/porquinho-sorriso.png" alt="Porquinho feliz" />
-        </div>
-      </section>
-
-      {/* ===== SEÇÃO O QUE É ===== */}
-      <section className="info-section">
-        <h2>O que é</h2>
-        <div className="info-content">
-          <p>
-            O <strong>Cofrinho dos 18</strong> é uma plataforma educativa que
-            combina sustentabilidade e finanças pessoais. A cada desafio e ação
-            de reciclagem, você soma pontos, sobe de nível e aprende a
-            economizar brincando!
-          </p>
-
-          <div className="info-grid">
-            <div className="info-item">
-              <img src="/assets/porquinho-oculos.png" alt="Porquinho estudioso" />
-            </div>
-            <div className="info-item">
-              <div className="card-feature">
-                <img src="/assets/icon-usuario.png" alt="Ícone perfil" />
-                <p>Perfil do Usuário</p>
-              </div>
-              <div className="card-feature">
-                <img src="/assets/icon-dashboard.png" alt="Ícone dashboard" />
-                <p>Dashboard</p>
-              </div>
-              <div className="card-feature">
-                <img src="/assets/icon-desafio.png" alt="Ícone desafios" />
-                <p>Desafios & Ranking</p>
-              </div>
-              <div className="card-feature">
-                <img src="/assets/icon-porquinho.png" alt="Ícone porquinho" />
-                <p>Porquinho Virtual</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== SEÇÃO COMO FUNCIONA ===== */}
-      <section className="funciona-section">
-        <h2>Como funciona</h2>
-        <p className="funciona-descricao">♻️ Entrega de recicláveis</p>
-
-        <div className="funciona-etapas">
-          <div className="etapa">
-            <img src="/assets/icon-reciclagem.png" alt="Reciclagem" />
-            <p>Entrega de recicláveis</p>
-          </div>
-          <div className="seta">➜</div>
-          <div className="etapa">
-            <img src="/assets/icon-moedas.png" alt="Conversão" />
-            <p>Conversão em valores</p>
-          </div>
-          <div className="seta">➜</div>
-          <div className="etapa">
-            <img src="/assets/icon-cofrinho.png" alt="Crescimento" />
-            <p>Crescimento do cofrinho</p>
-          </div>
-        </div>
-
-        <div className="faca-parte">
-          <h3>Faça Parte</h3>
-          <p>
-            Sua escola ou instituição também pode participar e ajudar a formar
-            jovens mais conscientes!
-          </p>
-          <button className="btn-laranja" onClick={() => navigate("/contatoinstitucional")}>Saiba mais</button>
+        <div className="hero-image">
           <img
-            src="/assets/porquinho-tchau.png"
-            alt="Porquinho acenando"
-            className="faca-parte-img"
+            src= {PorqFeliz}
+            alt="Porquinho feliz"
+            className="hero-img"
           />
         </div>
       </section>
 
-      {/* ===== RODAPÉ ===== */}
-      <footer className="home-footer">
-        <p>© 2025 <strong>Cofrinho dos 18</strong> — todos os direitos reservados.</p>
+      {/* ===== SOBRE ===== */}
+      <section id="sobre" className="sobre">
+        <div className="sobre-text">
+          <h2>O que é o Cofrinho dos 18?</h2>
+          <p>
+            O Cofrinho dos 18 é um projeto que une educação financeira e consciência ambiental. A cada moeda guardada e a cada material reciclado trocado, crianças e adolescentes aprendem que pequenas atitudes de hoje podem se transformar em grandes conquistas no futuro, chegando aos 18 anos com muito mais do que dinheiro: com disciplina, aprendizado e sonhos realizados.
+          </p>
+        </div>
+        <img
+          src= {PorqLivro}
+          alt="Porquinho estudioso"
+          className="sobre-img"
+        />
+      </section>
+
+      {/* ===== COMO FUNCIONA ===== */}
+      <section id="funciona" className="funciona">
+        <h2>Como funciona</h2>
+        <div className="cards">
+          <div className="card">
+            <img src= {Ponto} alt="Reciclagem" />
+            <h3>Entregue</h3>
+            <p>Leve seus recicláveis aos pontos parceiros.</p>
+          </div>
+          <div className="card">
+            <img src= {Troca} alt="Conversão" />
+            <h3>Converta</h3>
+            <p>Suas entregas viram moedas no cofrinho virtual.</p>
+          </div>
+          <div className="card">
+            <img src= {Dinheiro} alt="Crescimento" />
+            <h3>Progrida</h3>
+            <p>Suba de nível e desbloqueie recompensas exclusivas.</p>
+          </div>
+        </div>
+
+        <p className="funciona-descricao">
+          As unidades do projeto funcionam como pontos de troca de recicláveis. Cada material entregue é convertido em valor depositado diretamente na poupança do participante. Tudo pode ser acompanhado no site, onde um porquinho virtual cresce a cada troca, o usuário sobe de nível, participa de desafios e aparece no ranking, tornando o processo divertido, educativo e sustentável.🌎
+        </p>
+      </section>
+
+      {/* ===== PARTICIPE ===== */}
+      <section id="institucional" className="participe">
+        <div className="participe-content">
+          <div className="participe-text">
+            <h2>Faça parte</h2>
+            <p>
+              Instituições de ensino podem se cadastrar e participar do projeto.
+              Juntos, podemos transformar a educação e o meio ambiente.
+            </p>
+            <a href="/contatoinstitucional" className="btn-cta grande">
+              Saiba mais
+            </a>
+          </div>
+          <img
+            src= {PorqAcenando}
+            alt="Porquinho acenando"
+            className="participe-img"
+          />
+        </div>
+      </section>
+
+      {/* ===== FOOTER ===== */}
+      <footer className="footer">
+        <p>© 2025 Cofrinho dos 18 — todos os direitos reservados.</p>
       </footer>
     </div>
   );
 }
 
 export default Home;
+

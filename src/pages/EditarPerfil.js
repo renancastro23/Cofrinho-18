@@ -1,53 +1,70 @@
 import React, { useState } from "react";
 import "../styles/EditarPerfil.css";
+import Logo from "../assets/logo.png"
 
 function EditarPerfil() {
   const [nome, setNome] = useState("Júlia B.");
   const [senha, setSenha] = useState("");
+  const [foto, setFoto] = useState("/assets/avatar.png");
 
-  const handleSubmit = (e) => {
+  const handleTrocarSenha = (e) => {
     e.preventDefault();
-    alert("Informações atualizadas com sucesso!");
+    alert("Senha atualizada com sucesso!");
+  };
+
+  const handleFotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setFoto(reader.result);
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
-    <div className="perfil-container">
-      <div className="perfil-card">
-        <img
-          src="/assets/logo.png" // logo do projeto
-          alt="Logo Seu Porquinho"
-          className="perfil-logo"
-        />
+    <div className="editar-container">
+      {/* ===== LOGO ===== */}
+      <div className="editar-logo-area">
+        <img src= {Logo} alt="Logo Seu Porquinho" className="editar-logo" />
+      </div>
 
-        <h1 className="perfil-titulo">Editar Perfil</h1>
+      {/* ===== CARD DO PERFIL ===== */}
+      <div className="editar-card">
+        <h1>Editar Perfil</h1>
 
+        {/* Avatar e botão de alterar foto */}
         <div className="perfil-foto-container">
-          <img
-            src="/assets/avatar.png" // foto do usuário
-            alt="Avatar do usuário"
-            className="perfil-foto"
+          <img src={foto} alt="Avatar do usuário" className="perfil-foto" />
+          <label htmlFor="input-foto" className="btn-alterar-foto">
+            Alterar foto
+          </label>
+          <input
+            id="input-foto"
+            type="file"
+            accept="image/*"
+            onChange={handleFotoChange}
+            style={{ display: "none" }}
           />
-          <button className="perfil-alterar-foto">Alterar foto</button>
         </div>
 
-        <form className="perfil-form" onSubmit={handleSubmit}>
-          <label htmlFor="nome">Nome</label>
+        {/* Formulário */}
+        <form onSubmit={handleTrocarSenha} className="editar-form">
+          <label>Nome</label>
           <input
             type="text"
-            id="nome"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
           />
 
-          <label htmlFor="senha">Nova senha</label>
+          <label>Nova senha</label>
           <input
             type="password"
-            id="senha"
+            placeholder="Digite a nova senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
 
-          <button type="submit" className="perfil-botao">
+          <button type="submit" className="btn-laranja">
             Trocar senha
           </button>
         </form>
