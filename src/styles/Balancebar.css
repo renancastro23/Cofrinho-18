@@ -1,0 +1,92 @@
+/* ===== BALANCE BAR ===== */
+.material-summary {
+  width: 90%;
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.material-header {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  display: inline-block;
+ 
+}
+
+.graph-title {
+  color: #1e3a8a;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  margin: 10px 0 0 0;
+  
+}
+
+
+
+.listbox-options {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  position: absolute;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.listbox-option {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.listbox-option:hover {
+  background-color: #f3f4f6;
+}
+
+.bar {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bar > div {
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.plastic {
+  background-color: #3b82f6;
+}
+
+.paper {
+  background-color: #60a5fa;
+}
+
+.metal {
+  background-color: #93c5fd;
+}
+
+.glass {
+  background-color: #38bdf8;
+}
+
+.week-ranking {
+  margin-top: 1rem;
+}
+
+.week-ranking ol {
+  padding-left: 1.2rem;
+}
+
+.week-ranking li {
+  margin-bottom: 0.3rem;
+  color: #1e3a8a;
+  font-weight: 500;
+}

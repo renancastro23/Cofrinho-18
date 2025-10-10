@@ -1,0 +1,318 @@
+/* ====== PRINCIPAL (Dashboard) ====== */
+:root {
+  --blue-dark: #1e3a8a;
+  --blue-medium: #3b82f6;
+  --blue-light: #93c5fd;
+  --orange: #f97316;
+  --orange-light: #fbbf24;
+  --bg-light: #f9fafb;
+  --text-dark: #111827;
+  --radius: 20px;
+  /* sidebar width: responsive between 220px and 320px, using 18vw as preferred */
+  --sidebar-width: clamp(220px, 18vw, 320px);
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}
+
+/* Container geral */
+.container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  /* reserve space for the fixed sidebar without breaking vertical flow */
+  padding-left: var(--sidebar-width);
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  background-color: var(--blue-dark);
+  color: white;
+  width: var(--sidebar-width);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 4px 0 10px rgba(0, 0.5, 0, 0.5);
+  /* make it fixed and occupy viewport height; allow internal scroll if content overflows */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 50;
+}
+
+.profile {
+  text-align: center;
+}
+
+/* hamburger button for mobile */
+.hamburger {
+  display: none; /* shown only on small screens */
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 60;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: white;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger .bar {
+  display:block;
+  width: 18px;
+  height: 2px;
+  background: var(--blue-dark);
+  position: relative;
+}
+.hamburger .bar::before, .hamburger .bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: var(--blue-dark);
+}
+.hamburger .bar::before { top: -6px; }
+.hamburger .bar::after { top: 6px; }
+
+.profile .avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+  border: 3px solid var(--blue-medium);
+}
+
+.profile .name {
+  font-weight: 600;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: auto;
+  gap: 1rem;
+}
+
+.menu-item {
+  background-color: var(--blue-medium);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.menu-item:hover {
+  background-color: var(--orange);
+}
+
+.menu-item.active {
+  background-color: var(--orange);
+  font-weight: bold;
+}
+
+.links-contato {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.9rem;
+  font-size: 0.85rem;
+   border-top: 1px solid rgba(230, 212, 212, 0.08);
+   padding-top: 0.6rem;
+}
+
+.links-contato a {
+  color: #e0e7ff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.links-contato a:hover {
+  color: var(--orange);
+}
+
+/* ===== Dashboard Principal ===== */
+.dashboard {
+  flex: 1;
+  padding: 0rem;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* header and logo sizing */
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  background-color: white;
+}
+
+.logo {
+  display: flex;
+  width: 180px; /* increased size */
+  max-width: 70%;
+  height: auto;
+}
+
+.piggy-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: auto;
+}
+
+.piggy {
+  width: 300px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.balance-card {
+  background-color: var(--orange);
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: var(--radius);
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
+  
+}
+
+.balance-card h2 {
+  margin: 0.5rem 0 0;
+  font-size: 1.8rem;
+}
+
+/* ===== Painel à direita ===== */
+.right-panel {
+  width: 250px;
+  background: linear-gradient(to bottom, #f1f5f9, #122b7b);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card {
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.card.orange {
+  background-color: var(--orange);
+}
+
+.card.blue {
+  background-color: var(--blue-medium);
+}
+
+.card.yellow {
+  background-color: var(--orange);
+  color: #111827;
+}
+
+.card h4 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.status.success {
+  margin-top: 0.5rem;
+  background: #22c55e;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  display: inline-block;
+  font-size: 0.85rem;
+}
+
+.deadline {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.reward-btn {
+  margin-top: 0.75rem;
+  background-color: white;
+  color: var(--orange);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.reward-btn:hover {
+  background-color: var(--orange-light);
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+  }
+
+  /* mobile: sidebar becomes off-canvas and toggled by hamburger */
+  .sidebar {
+    border-radius: 0;
+    position: fixed;
+    height: 100vh;
+    overflow: auto;
+    transform: translateX(-110%);
+    transition: transform 0.28s ease;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    z-index: 50;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .right-panel { display: none; }
+
+  .dashboard {
+    padding: 1rem;
+  }
+
+  /* show hamburger on small screens */
+  .hamburger { display: flex; }
+
+  /* backdrop when sidebar open */
+  .sidebar-backdrop { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 45; }
+
+  .piggy {
+    width: 160px;
+  }
+
+  /* remove reserved sidebar space on small screens */
+  .container {
+    padding-left: 0;
+  }
+}

@@ -1,0 +1,36 @@
+/* ===== RECENT LIST ===== */
+.recent-launches {
+  background-color: #f8fafc;
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recent-launches h4 {
+  color: #1e3a8a;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.recent-launches ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-launches li {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+}
+
+.recent-launches li:hover {
+  transform: translateY(-2px);
+  background-color: #2563eb;
+}
