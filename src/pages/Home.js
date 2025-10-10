@@ -13,22 +13,24 @@ function Home() {
     <div className="home-wrapper">
       {/* ===== HEADER ===== */}
       <header className="header">
-        <div className="logo-area">
-          <img src= {Logo} alt="Logo Seu Porquinho" className="logo" />
-          <h1>Cofrinho dos 18</h1>
-        </div>
+  <div className="header-container">
+    <div className="logo-area">
+      <img src= {Logo} alt="Logo Cofrinho" className="logo" />
+    </div>
 
-        <nav className="nav">
-          <a href="#sobre">Sobre</a>
-          <a href="#funciona">Como Funciona</a>
-          <a href="#institucional">Instituições</a>
-        </nav>
+    <nav className="nav">
+      <a href="#sobre">Sobre</a>
+      <a href="#funciona">Como Funciona</a>
+      <a href="#institucional">Instituições</a>
+    </nav>
 
-        <div className="nav-buttons">
-          <a href="/login" className="btn-login">Entrar</a>
-          <a href="/login" className="btn-cta">Começar agora</a>
-        </div>
-      </header>
+    <div className="buttons">
+      <a href="/login" className="btn-outline">Entrar</a>
+      <a href="/login" className="btn-filled">Começar agora</a>
+    </div>
+  </div>
+</header>
+
 
       {/* ===== HERO SECTION ===== */}
       <section className="hero">

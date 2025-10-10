@@ -43,7 +43,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  height: 90vh;
+  height: 100vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 50;
@@ -207,13 +207,19 @@ body {
 
 /* ===== Painel à direita ===== */
 .right-panel {
-  width: 250px;
+  width: 280px;
+  max-width: 25%;
+  min-width: 240px;
+  margin-right: 1rem;
   background: linear-gradient(to bottom, #f1f5f9, #122b7b);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  border-radius: 12px;
+  box-sizing: border-box;
 }
+
 
 .card {
   border-radius: var(--radius);
