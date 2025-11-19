@@ -1,0 +1,6 @@
+@CofrinhoApi_HostAddress = http://localhost:5178
+
+GET {{CofrinhoApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
