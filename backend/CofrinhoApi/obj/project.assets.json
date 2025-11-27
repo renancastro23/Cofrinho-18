@@ -3958,19 +3958,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\renan\\.nuget\\packages\\": {}
+    "C:\\Users\\gisel\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\renan\\Documents\\Cofrinho 18\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj",
+      "projectUniqueName": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj",
       "projectName": "CofrinhoApi",
-      "projectPath": "C:\\Users\\renan\\Documents\\Cofrinho 18\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj",
-      "packagesPath": "C:\\Users\\renan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\renan\\Documents\\Cofrinho 18\\Cofrinho-18\\backend\\CofrinhoApi\\obj\\",
+      "projectPath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj",
+      "packagesPath": "C:\\Users\\gisel\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\renan\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\gisel\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
