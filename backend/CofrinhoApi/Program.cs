@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 using CofrinhoApi.Stores; // se você estiver usando o store em algum lugar
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,13 +22,20 @@ builder.Services.AddCors(options =>
 });
 
 // ===== Serviços =====
+=======
+var builder = WebApplication.CreateBuilder(args);
+
+>>>>>>> ab5c9e4 (adding MORE IMPORTE FILES)
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+<<<<<<< HEAD
 // ===== Pipeline =====
+=======
+>>>>>>> ab5c9e4 (adding MORE IMPORTE FILES)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -35,12 +43,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+<<<<<<< HEAD
 
 // ATENÇÃO: CORS antes de Authorization
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
+=======
+app.UseAuthorization();
+>>>>>>> ab5c9e4 (adding MORE IMPORTE FILES)
 app.MapControllers();
 
 app.Run();
