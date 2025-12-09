@@ -1,14 +1,46 @@
-import { useState } from 'react';
-import BalanceBar from './Componets/Balancebar';
-import RecentList from './Componets/Recentlist';
-import '../styles/Principal.css';
-import perfil from '../assets/principal/perfil.png';
-import porquinho from '../assets/principal/porquinho-chapeu.png'; 
-import logo from '../assets/principal/logov.png';
+// src/pages/Principal.js
+import { useState } from "react";
+import BalanceBar from "./Componets/Balancebar";
+import RecentList from "./Componets/Recentlist";
+import "../styles/Principal.css";
+import perfil from "../assets/principal/perfil.png";
+import porquinho from "../assets/principal/porquinho-chapeu.png";
+import logo from "../assets/principal/logov.png";
 
 const Dashboard = () => {
-  const [active, setActive] = useState('Home');
+  const [active, setActive] = useState("Home");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const [desafios] = useState([
+    {
+      id: 1,
+      titulo: "O Desafio do Dia",
+      descricao: "Recicle 400g em garrafas plásticas",
+      prazo: "⏰ Prazo: 24h",
+      tipo: "Diário",
+      cor: "orange",
+      status: null,
+    },
+    {
+      id: 2,
+      titulo: "Meta da Semana",
+      descricao: "Faça 5 envios de quaisquer materiais",
+      prazo: "",
+      tipo: "Semanal",
+      cor: "blue",
+      status: "✅ Concluído",
+    },
+    {
+      id: 3,
+      titulo: "O Porquinho de Ouro",
+      descricao: "Acumule R$ 50,00 em valor total de reciclagem",
+      prazo: "",
+      tipo: "Especial",
+      cor: "yellow",
+      status: null,
+      botaoRecompensa: true,
+    },
+  ]);
 
   const handleClick = (menu) => {
     setActive(menu);
@@ -16,30 +48,57 @@ const Dashboard = () => {
   };
 
   const showReward = () => {
-    alert('🎁 Parabéns! Você desbloqueou a recompensa do Porquinho de Ouro!');
+    alert("🎁 Parabéns! Você desbloqueou a recompensa do Porquinho de Ouro!");
   };
 
   return (
     <div className="container">
       {/* hamburger button for mobile */}
-      <button className="hamburger" aria-label="Abrir menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
+      <button
+        className="hamburger"
+        aria-label="Abrir menu"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
         <span className="bar" />
       </button>
-      {/* Sidebar (integrado) */}
-  <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="profile">
           <img src={perfil} alt="Júlia B." className="avatar" />
           <p className="name">Júlia B.</p>
         </div>
 
         <nav className="menu">
-          <button className={`menu-item ${active === 'Home' ? 'active' : ''}`} onClick={() => { handleClick('Home'); setSidebarOpen(false); }}>
+          <button
+            className={`menu-item ${active === "Home" ? "active" : ""}`}
+            onClick={() => {
+              handleClick("Home");
+              setSidebarOpen(false);
+            }}
+          >
             🏠 Home
           </button>
-          <button className={`menu-item ${active === 'Lançamentos' ? 'active' : ''}`} onClick={() => { handleClick('Lançamentos'); setSidebarOpen(false); }}>
+          <button
+            className={`menu-item ${
+              active === "Lançamentos" ? "active" : ""
+            }`}
+            onClick={() => {
+              handleClick("Lançamentos");
+              setSidebarOpen(false);
+            }}
+          >
             🕒 Últimos Lançamentos
           </button>
-          <button className={`menu-item ${active === 'Personalizar' ? 'active' : ''}`} onClick={() => { handleClick('Personalizar'); setSidebarOpen(false); }}>
+          <button
+            className={`menu-item ${
+              active === "Personalizar" ? "active" : ""
+            }`}
+            onClick={() => {
+              handleClick("Personalizar");
+              setSidebarOpen(false);
+            }}
+          >
             🎨 Personalizar Cofrinho
           </button>
         </nav>
@@ -50,8 +109,13 @@ const Dashboard = () => {
         </div>
       </aside>
 
-  {/* backdrop for mobile when sidebar is open */}
-  {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
+      {/* backdrop for mobile when sidebar is open */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       {/* Centro - Dashboard principal */}
       <main className="dashboard">
@@ -71,25 +135,23 @@ const Dashboard = () => {
         <RecentList />
       </main>
 
-      {/* Right panel (integrado) */}
+      {/* Painel direito com desafios dinâmicos */}
       <section className="right-panel">
-        <div className="card orange">
-          <h4>O Desafio do Dia</h4>
-          <p>Recicle 400g em garrafas plásticas</p>
-          <div className="deadline">⏰ Prazo: 24h</div>
-        </div>
+        {desafios.map((d) => (
+          <div key={d.id} className={`card ${d.cor}`}>
+            <h4>{d.titulo}</h4>
+            <p>{d.descricao}</p>
+            {d.prazo && <div className="deadline">{d.prazo}</div>}
 
-        <div className="card blue">
-          <h4>Meta da Semana</h4>
-          <p>Faça 5 envios de quaisquer materiais</p>
-          <div className="status success">✅ Concluído</div>
-        </div>
+            {d.status && <div className="status success">{d.status}</div>}
 
-        <div className="card yellow">
-          <h4>O Porquinho de Ouro</h4>
-          <p>Acumule R$ 50,00 em valor total de reciclagem</p>
-          <button className="reward-btn" onClick={showReward}>Ver Recompensa</button>
-        </div>
+            {d.botaoRecompensa && (
+              <button className="reward-btn" onClick={showReward}>
+                Ver Recompensa
+              </button>
+            )}
+          </div>
+        ))}
       </section>
     </div>
   );

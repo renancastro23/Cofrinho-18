@@ -248,6 +248,14 @@ body {
   margin-right: auto;
 }
 
+.card p {
+  color: var(--texto)
+}
+
+.card h3 {
+   color: var(--texto)
+}
+
 /* ===== PARTICIPE ===== */
 .participe {
   background: var(--azul-claro);

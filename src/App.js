@@ -9,6 +9,9 @@ import QuemSomos from "./pages/QuemSomos";
 import EditarPerfil from "./pages/EditarPerfil";
 import Contato from "./pages/Contato";
 import ContatoInstitucional from "./pages/ContatoInstitucional";
+import AdminDashboard from "./pages/AdminDashboard";
+import DirectorDashboard from "./pages/DirectorDashboard";
+
 
 function App() {
   return (
@@ -25,6 +28,8 @@ function App() {
         <Route path="/editarperfil" element={<EditarPerfil />} />
         <Route path="/contato" element={<Contato />} />
         <Route path="/contatoinstitucional" element={<ContatoInstitucional />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/diretor" element={<DirectorDashboard />} />
 
         {/* Rota alternativa para URLs não encontradas */}
         <Route

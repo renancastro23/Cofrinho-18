@@ -26,7 +26,7 @@ function Home() {
 
     <div className="buttons">
       <a href="/login" className="btn-outline">Entrar</a>
-      <a href="/login" className="btn-filled">Começar agora</a>
+      <a href="/ContatoInstitucional" className="btn-filled">Começar agora</a>
     </div>
   </div>
 </header>
