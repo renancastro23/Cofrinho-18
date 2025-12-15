@@ -1,0 +1,12 @@
+### Teste Email Institucional
+POST http://localhost:5000/api/institutional
+Content-Type: application/json
+
+{
+  "instituicao": "Escola Municipal de Teste",
+  "representante": "João da Silva",
+  "tipo": "Pública",
+  "email": "diretor@escolamunicipal.com",
+  "whatsapp": "(21) 98765-4321",
+  "mensagem": "Olá! Gostaríamos de agendar uma demonstração do Cofrinho dos 18 para nossa escola."
+}
