@@ -1,15 +1,20 @@
 /* ============================================
    MANAGEMENT.CSS – Dashboards Cofrinho dos 18
-   Hierarquia: Usuário -> Unidade/Turma -> Diretor -> Admin
+   Unificado: Admin + Diretor
    ============================================ */
+
+:root {
+  --azul: #0078d4;
+  --azul-claro: #eaf3ff;
+  --laranja: #f58220;
+}
 
 .dashboard-page {
   background: #f5f6fb;
   min-height: 100vh;
-  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   padding: 1.5rem 0;
-  color: var(--texto);
+  color: #111827;
 }
 
 .dashboard-shell {
@@ -18,10 +23,7 @@
   padding: 0 1.5rem;
 }
 
-/* =====================
-   TOPBAR
-   ===================== */
-
+/* TOPBAR */
 .dashboard-topbar {
   background: #ffffff;
   border-radius: 14px;
@@ -79,15 +81,7 @@
   color: #4b5563;
 }
 
-/* =====================
-   ÁREA PRINCIPAL + ABAS
-   ===================== */
-
-.dashboard-main {
-  margin-top: 0.5rem;
-}
-
-/* Abas superiores (resumidas e adaptadas ao Cofrinho) */
+/* ABAS */
 .dashboard-tabs {
   display: flex;
   gap: 0.5rem;
@@ -118,10 +112,7 @@
   font-weight: 600;
 }
 
-/* =====================
-   CARDS DE RESUMO
-   ===================== */
-
+/* KPI CARDS */
 .dashboard-summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -172,10 +163,7 @@
   box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
 }
 
-/* =====================
-   GRID PRINCIPAL (form + tabela)
-   ===================== */
-
+/* GRID */
 .dashboard-content-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr);
@@ -189,25 +177,7 @@
   }
 }
 
-/* GRID EXTRA (unidades + desafios no diretor) */
-
-.dashboard-extra-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.15fr);
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-}
-
-@media (max-width: 980px) {
-  .dashboard-extra-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =====================
-   TÍTULOS E SUBTÍTULOS
-   ===================== */
-
+/* TÍTULOS */
 .dash-section-title {
   font-size: 1rem;
   margin: 0 0 0.4rem;
@@ -220,10 +190,7 @@
   color: #6b7280;
 }
 
-/* =====================
-   FORMULÁRIOS
-   ===================== */
-
+/* FORM */
 .dash-form {
   display: flex;
   flex-direction: column;
@@ -250,7 +217,7 @@
   font-size: 0.83rem;
   outline: none;
   background: #f9fafb;
-  color: var(--texto);
+  color: #111827;
 }
 
 .dash-form-group input:focus,
@@ -259,10 +226,20 @@
   background: #ffffff;
 }
 
-/* =====================
-   FILTROS
-   ===================== */
+/* FORM ROW */
+.dash-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
 
+@media (max-width: 560px) {
+  .dash-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* FILTERS */
 .dash-filters {
   display: flex;
   flex-wrap: wrap;
@@ -296,10 +273,7 @@
   cursor: pointer;
 }
 
-/* =====================
-   TABELAS
-   ===================== */
-
+/* TABLES */
 .dash-table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -317,6 +291,7 @@
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
   white-space: nowrap;
+  vertical-align: top;
 }
 
 .dash-table th {
@@ -329,15 +304,25 @@
   background: #f9fafb;
 }
 
+.th-actions {
+  text-align: right;
+}
+
+.td-muted {
+  color: #6b7280;
+}
+
+.td-strong {
+  font-weight: 700;
+  color: #111827;
+}
+
 .dash-row-selected td {
   background: #e0edff;
   font-weight: 600;
 }
 
-/* =====================
-   CARD DE DETALHES
-   ===================== */
-
+/* DETAIL CARD */
 .dash-detail-card {
   margin-top: 0.9rem;
   padding: 0.8rem 1rem;
@@ -358,10 +343,7 @@
   margin: 0.15rem 0;
 }
 
-/* =====================
-   LISTA DE UNIDADES/TURMAS (Diretor)
-   ===================== */
-
+/* UNIT LIST */
 .unit-list {
   list-style: none;
   margin: 0;
@@ -406,7 +388,6 @@
   align-self: flex-start;
 }
 
-/* form pequeno para criar unidade/turma */
 .unit-form-inline {
   margin-top: 0.8rem;
   display: flex;
@@ -420,16 +401,14 @@
   padding: 0.5rem 0.85rem;
   font-size: 0.78rem;
   background: #f9fafb;
+  color: #111827;
 }
 
 .unit-form-inline button {
   align-self: flex-end;
 }
 
-/* =====================
-   BOTÕES
-   ===================== */
-
+/* BUTTONS */
 .btn-laranja {
   background: var(--laranja);
   color: #fff;
@@ -439,9 +418,8 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 0.5rem;
-  transition: background 0.2s ease, box-shadow 0.2s ease,
-    transform 0.1s ease;
+  margin-top: 0.2rem;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 }
 
 .btn-laranja:hover {
@@ -463,12 +441,214 @@
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-outline:hover {
   background: var(--azul-claro);
   border-color: var(--azul);
   color: var(--azul);
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.btn-danger:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.btn-xs {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+/* PILL */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--azul-claro);
+  color: var(--azul);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* HINT */
+.dash-hint {
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+/* TABLE ACTIONS */
+.table-actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.mini-warning {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  color: #b45309;
+}
+
+/* STATUS PILL */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.status-ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-off {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* QUICK ACTIONS */
+.quick-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 9999;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+  padding: 1rem 1.1rem;
+}
+
+.modal-card-wide {
+  max-width: 700px;
+}
+
+.modal-title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.modal-text {
+  margin: 0 0 0.9rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+/* AUTOCOMPLETE */
+.user-picker {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.suggestions {
+  margin-top: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.suggestion-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.suggestion-item:hover {
+  background: #f9fafb;
+}
+
+.suggestion-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.suggestion-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.suggestion-meta {
+  font-size: 0.72rem;
+  color: #6b7280;
+}
+
+.suggestions-empty {
+  margin-top: 0.5rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+/* UL */
+.dash-ul {
+  margin: 0.25rem 0 0;
+  padding-left: 1.1rem;
+  color: #374151;
+  font-size: 0.85rem;
+  line-height: 1.55;
 }
