@@ -10,6 +10,7 @@
   --radius: 20px;
   /* sidebar width: responsive between 220px and 320px, using 18vw as preferred */
   --sidebar-width: clamp(220px, 18vw, 320px);
+  --right-panel-width: 250px;
 }
 
 body {
@@ -18,6 +19,7 @@ body {
   color: var(--text-dark);
   margin: 0;
   padding: 0;
+  overflow-x: hidden; /* Previne rolagem horizontal global */
 }
 
 /* Container geral */
@@ -27,6 +29,11 @@ body {
   min-height: 100vh;
   /* reserve space for the fixed sidebar without breaking vertical flow */
   padding-left: var(--sidebar-width);
+  /* Espaço para o right-panel fixo */
+  padding-right: var(--right-panel-width);
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden; /* Garante que não há overflow horizontal */
 }
 
 /* ===== Sidebar ===== */
@@ -38,7 +45,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 4px 0 10px rgba(0, 0.5, 0, 0.5);
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.5);
   /* make it fixed and occupy viewport height; allow internal scroll if content overflows */
   position: fixed;
   top: 0;
@@ -47,6 +54,7 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 50;
+  box-sizing: border-box;
 }
 
 .profile {
@@ -119,6 +127,9 @@ body {
   align-items: center;
   justify-content: center;
   transition: background 0.3s;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
 }
 
 .menu-item:hover {
@@ -136,7 +147,7 @@ body {
   justify-content: center;
   gap: 0.9rem;
   font-size: 0.85rem;
-   border-top: 1px solid rgba(230, 212, 212, 0.08);
+   border-top: 1px solid rgba(255, 255, 255, 0.08);
    padding-top: 0.6rem;
 }
 
@@ -144,6 +155,7 @@ body {
   color: #e0e7ff;
   text-decoration: none;
   transition: color 0.3s;
+  white-space: nowrap;
 }
 
 .links-contato a:hover {
@@ -153,11 +165,15 @@ body {
 /* ===== Dashboard Principal ===== */
 .dashboard {
   flex: 1;
-  padding: 0rem;
+  padding: 1rem;
   background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(100vw - var(--sidebar-width) - var(--right-panel-width));
+  min-width: 0; /* Permite que o flex shrink funcione */
 }
 
 /* header and logo sizing */
@@ -168,11 +184,12 @@ body {
   align-items: center;
   padding: 1rem 0;
   background-color: white;
+  box-sizing: border-box;
 }
 
 .logo {
   display: flex;
-  width: 180px; /* increased size */
+  width: 180px;
   max-width: 70%;
   height: auto;
 }
@@ -182,105 +199,190 @@ body {
   flex-direction: column;
   align-items: center;
   margin-bottom: auto;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .piggy {
   width: 300px;
   height: auto;
   margin-bottom: 1rem;
+  max-width: 100%;
 }
 
 .balance-card {
   background-color: var(--orange);
   color: white;
-  padding: 0.5rem 2rem;
+  padding: 0.8rem 1.5rem;
   border-radius: var(--radius);
-  text-align: left;
+  text-align: center;
   box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
-  
+  box-sizing: border-box;
+  width: auto;
+  max-width: 100%;
+  word-break: break-word;
 }
 
 .balance-card h2 {
   margin: 0.5rem 0 0;
   font-size: 1.8rem;
+  line-height: 1.2;
+  word-break: break-word;
 }
 
-/* ===== Painel à direita ===== */
+/* ===== Painel à direita (OTIMIZADO) ===== */
 .right-panel {
+<<<<<<< HEAD
   width: 280px;
   max-width: 25%;
   min-width: 240px;
   margin-right: 1rem;
+=======
+  width: var(--right-panel-width);
+>>>>>>> 168028b (Todos os Modais)
   background: linear-gradient(to bottom, #f1f5f9, #122b7b);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+<<<<<<< HEAD
   border-radius: 12px;
   box-sizing: border-box;
 }
 
 
 .card {
+=======
+  
+  /* POSIÇÃO FIXA */
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  
+  /* ROLAGEM APENAS VERTICAL - SEM HORIZONTAL */
+  overflow-x: hidden;
+  overflow-y: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+  
+  /* GARANTE que o conteúdo não ultrapasse */
+  box-sizing: border-box;
+  z-index: 40;
+}
+
+/* Esconde scrollbar no Chrome, Safari e Opera */
+.right-panel::-webkit-scrollbar {
+  display: none;
+}
+
+/* CARDS dentro do right-panel */
+.right-panel .card {
+>>>>>>> 168028b (Todos os Modais)
   border-radius: var(--radius);
   padding: 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   color: white;
+  
+  /* GARANTE ajuste perfeito à largura */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  min-height: 0; /* Permite shrink */
 }
 
-.card.orange {
+.right-panel .card.orange {
   background-color: var(--orange);
 }
 
-.card.blue {
+.right-panel .card.blue {
   background-color: var(--blue-medium);
 }
 
-.card.yellow {
+.right-panel .card.yellow {
   background-color: var(--orange);
   color: #111827;
 }
 
-.card h4 {
+/* TEXTOS dentro dos cards */
+.right-panel .card h4 {
   margin-top: 0;
+  margin-bottom: 0.5rem;
   font-size: 1.1rem;
+  line-height: 1.3;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
-.status.success {
+.right-panel .card p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.right-panel .status.success {
   margin-top: 0.5rem;
   background: #22c55e;
   color: white;
-  padding: 0.2rem 0.5rem;
+  padding: 0.3rem 0.6rem;
   border-radius: 6px;
   display: inline-block;
   font-size: 0.85rem;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
 }
 
-.deadline {
+.right-panel .deadline {
   margin-top: 0.5rem;
   font-size: 0.9rem;
+  display: block;
+  word-break: break-word;
 }
 
-.reward-btn {
+/* BOTÃO dentro do right-panel */
+.right-panel .reward-btn {
   margin-top: 0.75rem;
   background-color: white;
   color: var(--orange);
   border: none;
   border-radius: 8px;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
 }
 
-.reward-btn:hover {
+.right-panel .reward-btn:hover {
   background-color: var(--orange-light);
+}
+
+/* GARANTE que nada dentro do right-panel cause overflow */
+.right-panel * {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* ===== Responsividade ===== */
 @media (max-width: 1024px) {
   .container {
     flex-direction: column;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100vw;
+    overflow-x: hidden;
   }
 
   /* mobile: sidebar becomes off-canvas and toggled by hamburger */
@@ -301,24 +403,56 @@ body {
     transform: translateX(0);
   }
 
-  .right-panel { display: none; }
+  .right-panel { 
+    display: none; 
+  }
 
   .dashboard {
     padding: 1rem;
+    max-width: 100vw;
+    width: 100%;
   }
 
   /* show hamburger on small screens */
-  .hamburger { display: flex; }
+  .hamburger { 
+    display: flex; 
+  }
 
   /* backdrop when sidebar open */
-  .sidebar-backdrop { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 45; }
+  .sidebar-backdrop { 
+    display: block; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.35); 
+    z-index: 45; 
+  }
 
+  .piggy {
+    width: 200px;
+    max-width: 80%;
+  }
+
+  .balance-card {
+    padding: 0.7rem 1.2rem;
+    width: 90%;
+    max-width: 300px;
+  }
+
+  .balance-card h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
   .piggy {
     width: 160px;
   }
 
-  /* remove reserved sidebar space on small screens */
-  .container {
-    padding-left: 0;
+  .balance-card {
+    padding: 0.6rem 1rem;
+  }
+
+  .balance-card h2 {
+    font-size: 1.4rem;
   }
 }
