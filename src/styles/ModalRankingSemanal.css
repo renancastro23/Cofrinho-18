@@ -1,0 +1,184 @@
+/* src/styles/ModalRankingSemanal.css */
+.modal-ranking {
+  padding: 0.5rem;
+}
+
+/* TOGGLE */
+.ranking-toggle {
+  display: flex;
+  background-color: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.ranking-toggle .toggle-btn {
+  flex: 1;
+  padding: 0.7rem;
+  border: none;
+  background: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.ranking-toggle .toggle-btn.ativo {
+  background-color: white;
+  color: #1e3a8a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* PERÍODO */
+.ranking-periodo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.ranking-periodo h3 {
+  color: #1e3a8a;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.ranking-descricao {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* LISTA DE RANKING */
+.ranking-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  background-color: #f8fafc;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border-left: 4px solid #3b82f6;
+  transition: transform 0.2s;
+}
+
+.ranking-item.usuario-atual {
+  background-color: #e0f2fe;
+  border-left: 4px solid #f59e0b;
+}
+
+.ranking-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* POSIÇÃO */
+.ranking-posicao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50px;
+  min-width: 50px;
+}
+
+.ranking-avatar {
+  font-size: 1.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.ranking-numero {
+  font-weight: 700;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* NOME */
+.ranking-nome {
+  flex: 1;
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nome-texto {
+  font-weight: 600;
+  color: #111827;
+}
+
+.badge-usuario {
+  background-color: #3b82f6;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* PONTOS */
+.ranking-pontos {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin-right: 1rem;
+  min-width: 70px;
+}
+
+.pontos-valor {
+  font-weight: 700;
+  color: #1e3a8a;
+  font-size: 1.2rem;
+}
+
+.pontos-texto {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* BARRA DE PROGRESSO */
+.ranking-barra-container {
+  flex: 1;
+  max-width: 150px;
+  background-color: #e5e7eb;
+  border-radius: 6px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.ranking-barra {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+/* LEGENDA */
+.ranking-legenda {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  background-color: #f8fafc;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.legenda-cor {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
