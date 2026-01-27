@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-// src/pages/Principal.js
-import { useState } from "react";
-import BalanceBar from "./Componets/Balancebar";
-import RecentList from "./Componets/Recentlist";
-import "../styles/Principal.css";
-import perfil from "../assets/principal/perfil.png";
-import porquinho from "../assets/principal/porquinho-chapeu.png";
-import logo from "../assets/principal/logov.png";
-=======
-=======
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 import { useState, useEffect } from 'react';
 import Modal from './Componets/Modal';
 import ModalLancamentos from './Componets/ModalLancamentos';
@@ -22,7 +9,6 @@ import '../styles/Principal.css';
 import perfilPadrao from '../assets/principal/perfil.png';
 import porquinho from '../assets/principal/porquinho2d.png'; 
 import logo from '../assets/principal/logov.png';
->>>>>>> 168028b (Todos os Modais)
 
 const Dashboard = () => {
   const [active, setActive] = useState("Home");
@@ -69,8 +55,8 @@ const Dashboard = () => {
       perfil: false
     });
   };
-<<<<<<< HEAD
 
+  // Dados estáticos dos desafios
   const [desafios] = useState([
     {
       id: 1,
@@ -101,8 +87,6 @@ const Dashboard = () => {
       botaoRecompensa: true,
     },
   ]);
-=======
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 
   const handleClick = (menu) => {
     setActive(menu);
@@ -133,50 +117,19 @@ const Dashboard = () => {
     setFotoUsuario(UserService.getFoto());
   };
 
-  // Função para quando o modal de perfil fecha
-  const handlePerfilModalClose = () => {
-    fecharModal();
-    // Atualiza a foto imediatamente após fechar o modal
-    setFotoUsuario(UserService.getFoto());
-  };
-
   return (
     <div className="container">
       {/* hamburger button for mobile */}
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <button
-        className="hamburger"
-        aria-label="Abrir menu"
-=======
       <button 
         className="hamburger" 
         aria-label="Abrir menu" 
->>>>>>> 168028b (Todos os Modais)
-=======
-      <button 
-        className="hamburger" 
-        aria-label="Abrir menu" 
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         <span className="bar" />
       </button>
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-      {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-=======
       
       {/* Sidebar (integrado) */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
->>>>>>> 168028b (Todos os Modais)
-=======
-      
-      {/* Sidebar (integrado) */}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
         <div className="profile">
           <img 
             src={fotoUsuario || perfilPadrao} 
@@ -189,37 +142,6 @@ const Dashboard = () => {
         </div>
 
         <nav className="menu">
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <button
-            className={`menu-item ${active === "Home" ? "active" : ""}`}
-            onClick={() => {
-              handleClick("Home");
-              setSidebarOpen(false);
-            }}
-          >
-            🏠 Home
-          </button>
-          <button
-            className={`menu-item ${
-              active === "Lançamentos" ? "active" : ""
-            }`}
-            onClick={() => {
-              handleClick("Lançamentos");
-              setSidebarOpen(false);
-            }}
-          >
-            🕒 Últimos Lançamentos
-          </button>
-          <button
-            className={`menu-item ${
-              active === "Personalizar" ? "active" : ""
-            }`}
-            onClick={() => {
-              handleClick("Personalizar");
-              setSidebarOpen(false);
-            }}
-=======
           <button 
             className={`menu-item ${active === 'Home' ? 'active' : ''}`} 
             onClick={() => handleClick('Home')}
@@ -235,24 +157,6 @@ const Dashboard = () => {
           <button 
             className={`menu-item ${active === 'Personalizar Cofrinho' ? 'active' : ''}`} 
             onClick={() => handleClick('Personalizar Cofrinho')}
->>>>>>> 168028b (Todos os Modais)
-=======
-          <button 
-            className={`menu-item ${active === 'Home' ? 'active' : ''}`} 
-            onClick={() => handleClick('Home')}
-          >
-            Ranking
-          </button>
-          <button 
-            className={`menu-item ${active === 'Lançamentos' ? 'active' : ''}`} 
-            onClick={() => handleClick('Lançamentos')}
-          >
-            🕒 Últimos Lançamentos
-          </button>
-          <button 
-            className={`menu-item ${active === 'Personalizar Cofrinho' ? 'active' : ''}`} 
-            onClick={() => handleClick('Personalizar Cofrinho')}
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
           >
             🎨 Personalizar Cofrinho
           </button>
@@ -266,21 +170,9 @@ const Dashboard = () => {
 
       {/* backdrop for mobile when sidebar is open */}
       {sidebarOpen && (
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <div
-          className="sidebar-backdrop"
-          onClick={() => setSidebarOpen(false)}
-=======
         <div 
           className="sidebar-backdrop" 
           onClick={() => setSidebarOpen(false)} 
->>>>>>> 168028b (Todos os Modais)
-=======
-        <div 
-          className="sidebar-backdrop" 
-          onClick={() => setSidebarOpen(false)} 
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
         />
       )}
 
@@ -299,17 +191,14 @@ const Dashboard = () => {
         </div>
       </main>
 
-      {/* Painel direito com desafios dinâmicos */}
+      {/* Right panel (integrado) */}
       <section className="right-panel">
         {desafios.map((d) => (
           <div key={d.id} className={`card ${d.cor}`}>
             <h4>{d.titulo}</h4>
             <p>{d.descricao}</p>
             {d.prazo && <div className="deadline">{d.prazo}</div>}
-
             {d.status && <div className="status success">{d.status}</div>}
-
-<<<<<<< HEAD
             {d.botaoRecompensa && (
               <button className="reward-btn" onClick={showReward}>
                 Ver Recompensa
@@ -317,15 +206,6 @@ const Dashboard = () => {
             )}
           </div>
         ))}
-=======
-        <div className="card yellow">
-          <h4>O Porquinho de Ouro</h4>
-          <p>Acumule R$ 50,00 em valor total de reciclagem</p>
-          <button className="reward-btn" onClick={showReward}>
-            Ver Recompensa
-          </button>
-        </div>
->>>>>>> 168028b (Todos os Modais)
       </section>
 
       {/* MODAIS */}
@@ -352,6 +232,7 @@ const Dashboard = () => {
       >
         <ModalPersonalizarPorquinho />
       </Modal>
+
       <Modal 
         isOpen={modalAberto.perfil}
         onClose={handlePerfilModalClose}
