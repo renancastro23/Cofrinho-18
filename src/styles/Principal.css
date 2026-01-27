@@ -232,32 +232,12 @@ body {
 
 /* ===== Painel à direita (OTIMIZADO) ===== */
 .right-panel {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  width: 280px;
-  max-width: 25%;
-  min-width: 240px;
-  margin-right: 1rem;
-=======
   width: var(--right-panel-width);
->>>>>>> 168028b (Todos os Modais)
-=======
-  width: var(--right-panel-width);
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
   background: linear-gradient(to bottom, #f1f5f9, #122b7b);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  border-radius: 12px;
-  box-sizing: border-box;
-}
-
-
-.card {
-=======
   
   /* POSIÇÃO FIXA */
   position: fixed;
@@ -276,26 +256,6 @@ body {
   z-index: 40;
 }
 
-=======
-  
-  /* POSIÇÃO FIXA */
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
-  
-  /* ROLAGEM APENAS VERTICAL - SEM HORIZONTAL */
-  overflow-x: hidden;
-  overflow-y: auto;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
-  
-  /* GARANTE que o conteúdo não ultrapasse */
-  box-sizing: border-box;
-  z-index: 40;
-}
-
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 /* Esconde scrollbar no Chrome, Safari e Opera */
 .right-panel::-webkit-scrollbar {
   display: none;
@@ -303,10 +263,6 @@ body {
 
 /* CARDS dentro do right-panel */
 .right-panel .card {
-<<<<<<< HEAD
->>>>>>> 168028b (Todos os Modais)
-=======
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
   border-radius: var(--radius);
   padding: 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
