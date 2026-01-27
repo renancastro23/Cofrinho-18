@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // src/pages/Principal.js
 import { useState } from "react";
 import BalanceBar from "./Componets/Balancebar";
@@ -8,6 +9,8 @@ import perfil from "../assets/principal/perfil.png";
 import porquinho from "../assets/principal/porquinho-chapeu.png";
 import logo from "../assets/principal/logov.png";
 =======
+=======
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 import { useState, useEffect } from 'react';
 import Modal from './Componets/Modal';
 import ModalLancamentos from './Componets/ModalLancamentos';
@@ -66,6 +69,7 @@ const Dashboard = () => {
       perfil: false
     });
   };
+<<<<<<< HEAD
 
   const [desafios] = useState([
     {
@@ -97,6 +101,8 @@ const Dashboard = () => {
       botaoRecompensa: true,
     },
   ]);
+=======
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 
   const handleClick = (menu) => {
     setActive(menu);
@@ -127,9 +133,17 @@ const Dashboard = () => {
     setFotoUsuario(UserService.getFoto());
   };
 
+  // Função para quando o modal de perfil fecha
+  const handlePerfilModalClose = () => {
+    fecharModal();
+    // Atualiza a foto imediatamente após fechar o modal
+    setFotoUsuario(UserService.getFoto());
+  };
+
   return (
     <div className="container">
       {/* hamburger button for mobile */}
+<<<<<<< HEAD
 <<<<<<< HEAD
       <button
         className="hamburger"
@@ -139,10 +153,16 @@ const Dashboard = () => {
         className="hamburger" 
         aria-label="Abrir menu" 
 >>>>>>> 168028b (Todos os Modais)
+=======
+      <button 
+        className="hamburger" 
+        aria-label="Abrir menu" 
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         <span className="bar" />
       </button>
+<<<<<<< HEAD
 <<<<<<< HEAD
 
       {/* Sidebar */}
@@ -152,6 +172,11 @@ const Dashboard = () => {
       {/* Sidebar (integrado) */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
 >>>>>>> 168028b (Todos os Modais)
+=======
+      
+      {/* Sidebar (integrado) */}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
         <div className="profile">
           <img 
             src={fotoUsuario || perfilPadrao} 
@@ -164,6 +189,7 @@ const Dashboard = () => {
         </div>
 
         <nav className="menu">
+<<<<<<< HEAD
 <<<<<<< HEAD
           <button
             className={`menu-item ${active === "Home" ? "active" : ""}`}
@@ -210,6 +236,23 @@ const Dashboard = () => {
             className={`menu-item ${active === 'Personalizar Cofrinho' ? 'active' : ''}`} 
             onClick={() => handleClick('Personalizar Cofrinho')}
 >>>>>>> 168028b (Todos os Modais)
+=======
+          <button 
+            className={`menu-item ${active === 'Home' ? 'active' : ''}`} 
+            onClick={() => handleClick('Home')}
+          >
+            Ranking
+          </button>
+          <button 
+            className={`menu-item ${active === 'Lançamentos' ? 'active' : ''}`} 
+            onClick={() => handleClick('Lançamentos')}
+          >
+            🕒 Últimos Lançamentos
+          </button>
+          <button 
+            className={`menu-item ${active === 'Personalizar Cofrinho' ? 'active' : ''}`} 
+            onClick={() => handleClick('Personalizar Cofrinho')}
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
           >
             🎨 Personalizar Cofrinho
           </button>
@@ -224,6 +267,7 @@ const Dashboard = () => {
       {/* backdrop for mobile when sidebar is open */}
       {sidebarOpen && (
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div
           className="sidebar-backdrop"
           onClick={() => setSidebarOpen(false)}
@@ -232,6 +276,11 @@ const Dashboard = () => {
           className="sidebar-backdrop" 
           onClick={() => setSidebarOpen(false)} 
 >>>>>>> 168028b (Todos os Modais)
+=======
+        <div 
+          className="sidebar-backdrop" 
+          onClick={() => setSidebarOpen(false)} 
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
         />
       )}
 

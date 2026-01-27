@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 using CofrinhoApi.Stores; // se você estiver usando o store em algum lugar
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 >>>>>>> ab5c9e4 (adding MORE IMPORTE FILES)
 =======
+=======
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 
 using CofrinhoApi.Services;
 
@@ -44,13 +47,17 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<InstitutionalEmailService>();
+<<<<<<< HEAD
 >>>>>>> e9c7fe9 (MailKit)
+=======
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 // ===== Pipeline =====
@@ -60,6 +67,10 @@ var app = builder.Build();
 app.UseCors("AllowReact");
 
 >>>>>>> e9c7fe9 (MailKit)
+=======
+app.UseCors("AllowReact");
+
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -67,6 +78,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 // ATENÇÃO: CORS antes de Authorization
@@ -77,6 +89,9 @@ app.UseAuthorization();
 =======
 app.UseAuthorization();
 >>>>>>> ab5c9e4 (adding MORE IMPORTE FILES)
+=======
+app.UseAuthorization();
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 app.MapControllers();
 
 app.Run();

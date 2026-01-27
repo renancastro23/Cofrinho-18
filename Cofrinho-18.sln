@@ -25,9 +25,13 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 <<<<<<< HEAD
+<<<<<<< HEAD
 		SolutionGuid = {CB34D769-C44A-4923-95A9-5B91144B3D16}
 =======
 		SolutionGuid = {CFC93B9D-7B8F-40CF-AF03-911119CFDD79}
 >>>>>>> e9c7fe9 (MailKit)
+=======
+		SolutionGuid = {CFC93B9D-7B8F-40CF-AF03-911119CFDD79}
+>>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
 	EndGlobalSection
 EndGlobal
