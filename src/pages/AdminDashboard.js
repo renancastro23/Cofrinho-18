@@ -1,5 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../styles/management.css";
+import {
+  getAdminSummary,
+  getAdminDirectors,
+  createAdminDirector,
+  updateAdminDirector,
+  deactivateAdminDirector,
+  getAdminUnits,
+  createAdminUnit,
+  updateAdminUnit,
+  deactivateAdminUnit,
+  getAdminUsers,
+  deactivateAdminUser
+} from "../api/cofrinhoApi";
 
 // ========= Helpers =========
 function onlyDigits(v = "") {
@@ -21,6 +34,7 @@ function formatCPF(v = "") {
 
 function isValidCPFBasic(cpf) {
   const d = onlyDigits(cpf);
+  if (!d) return true; // opcional visualmente
   if (d.length !== 11) return false;
   if (/^(\d)\1{10}$/.test(d)) return false;
   return true;
@@ -34,36 +48,31 @@ function isValidPasswordBasic(pwd) {
   return hasLetter && hasNumber;
 }
 
-// LocalStorage key (mock) — no backend você remove isso e usa API
-function directorPwdKeyById(id) {
-  return `C18_DIRECTOR_PWD_${id}`;
+function formatPhone(value) {
+  const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
 }
 
 export default function AdminDashboard() {
-  const [tab, setTab] = useState("visao"); // visao | diretores | unidades | usuarios | auditoria
+  const [tab, setTab] = useState("visao");
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState("");
+
+  // ===== Summary =====
+  const [summary, setSummary] = useState({
+    directors: 0,
+    units: 0,
+    users: 0,
+    trades: 0,
+    kg: 0,
+    money: 0
+  });
 
   // ===== Diretores =====
-  const [diretores, setDiretores] = useState([
-    {
-      id: 10,
-      nome: "Diretora Juliana",
-      email: "juliana@cofrinho18.com",
-      cpf: "123.456.789-10",
-      telefone: "(11) 90000-0000",
-      ativo: true,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 11,
-      nome: "Diretor Marcos",
-      email: "marcos@cofrinho18.com",
-      cpf: "987.654.321-00",
-      telefone: "(11) 98888-1111",
-      ativo: true,
-      createdAt: new Date().toISOString(),
-    },
-  ]);
-
+  const [diretores, setDiretores] = useState([]);
   const [novoDiretor, setNovoDiretor] = useState({
     nome: "",
     email: "",
@@ -72,87 +81,40 @@ export default function AdminDashboard() {
     senha: "",
     confirmarSenha: "",
   });
-
   const [filtroDiretor, setFiltroDiretor] = useState("");
-  const [ordenacaoDiretor, setOrdenacaoDiretor] = useState("nomeAsc"); // nomeAsc | nomeDesc | recente | ativo
+  const [ordenacaoDiretor, setOrdenacaoDiretor] = useState("nomeAsc");
+  const [isSubmittingDirector, setIsSubmittingDirector] = useState(false);
 
   // ===== Unidades =====
-  const [unidades, setUnidades] = useState([
-    {
-      id: 1,
-      nome: "Unidade Centro - Turma Pré I",
-      endereco: "Rua A, 123",
-      diretorId: 10,
-      createdAt: new Date().toISOString(),
-      ativa: true,
-    },
-    {
-      id: 2,
-      nome: "Unidade Zona Sul - Maternal B",
-      endereco: "Av. B, 500",
-      diretorId: 11,
-      createdAt: new Date().toISOString(),
-      ativa: true,
-    },
-  ]);
-
+  const [unidades, setUnidades] = useState([]);
   const [novaUnidade, setNovaUnidade] = useState({
     nome: "",
-    endereco: "",
     diretorId: "",
   });
-
   const [filtroUnidade, setFiltroUnidade] = useState("");
-  const [ordenacaoUnidade, setOrdenacaoUnidade] = useState("nomeAsc"); // nomeAsc | recente | diretor
+  const [ordenacaoUnidade, setOrdenacaoUnidade] = useState("nomeAsc");
+  const [isSubmittingUnit, setIsSubmittingUnit] = useState(false);
 
-  // ===== Usuários (visão global) =====
-  const [usuarios, setUsuarios] = useState([
-    {
-      id: 201,
-      nome: "Prof. Lucas",
-      email: "lucas@escola.com",
-      unidadeId: 1,
-      materiaisKg: 4.2,
-      valorTotal: 120.5,
-      trocas: 3,
-      ativo: true,
-    },
-    {
-      id: 202,
-      nome: "Tia Ana",
-      email: "ana@escola.com",
-      unidadeId: 2,
-      materiaisKg: 1.8,
-      valorTotal: 48.75,
-      trocas: 2,
-      ativo: true,
-    },
-  ]);
-
+  // ===== Usuários =====
+  const [usuarios, setUsuarios] = useState([]);
   const [filtroUsuario, setFiltroUsuario] = useState("");
-  const [ordenacaoUsuario, setOrdenacaoUsuario] = useState("nomeAsc"); // nomeAsc | kgDesc | valorDesc | trocasDesc | unidade
+  const [ordenacaoUsuario, setOrdenacaoUsuario] = useState("nomeAsc");
 
   // ===== Modais =====
-  // modal types:
-  // { type: 'editUnit', unitId }
-  // { type: 'confirmDeleteDirector', directorId }
-  // { type: 'confirmDeleteUnit', unitId }
-  // { type: 'resetDirectorPassword', directorId }
   const [modal, setModal] = useState(null);
+
+  const [editDirectorForm, setEditDirectorForm] = useState({
+    nome: "",
+    email: "",
+    telefone: ""
+  });
 
   const [editUnitForm, setEditUnitForm] = useState({
     nome: "",
-    endereco: "",
     diretorId: "",
-    ativa: true,
   });
 
-  const [resetPwdForm, setResetPwdForm] = useState({
-    novaSenha: "",
-    confirmarNovaSenha: "",
-  });
-
-  // ===== Auditoria simples (mock) =====
+  // ===== Auditoria visual temporária =====
   const [audit, setAudit] = useState([
     { id: 1, when: new Date().toISOString(), who: "admin", action: "Login realizado" },
   ]);
@@ -169,7 +131,143 @@ export default function AdminDashboard() {
     window.location.href = "/login";
   }
 
-  // ===== Helpers =====
+  // =========================
+  // Bootstrap
+  // =========================
+  useEffect(() => {
+    let alive = true;
+
+    async function bootstrap() {
+      try {
+        setIsLoading(true);
+        setApiError("");
+
+        const [summaryRes, directorsRes, unitsRes, usersRes] = await Promise.all([
+          getAdminSummary(),
+          getAdminDirectors(),
+          getAdminUnits(),
+          getAdminUsers()
+        ]);
+
+        if (!alive) return;
+
+        setSummary({
+          directors: Number(summaryRes?.directors || 0),
+          units: Number(summaryRes?.units || 0),
+          users: Number(summaryRes?.users || 0),
+          trades: Number(summaryRes?.trades || 0),
+          kg: Number(summaryRes?.kg || 0),
+          money: Number(summaryRes?.money || 0)
+        });
+
+        setDiretores((directorsRes || []).map((d) => ({
+          id: Number(d.id ?? d.Id),
+          nome: String(d.name ?? d.Name ?? ""),
+          email: String(d.email ?? d.Email ?? ""),
+          telefone: String(d.phoneNumber ?? d.PhoneNumber ?? ""),
+          ativo: Boolean(d.isActive ?? d.IsActive ?? true),
+          createdAt: d.createdAt ?? d.CreatedAt ?? new Date().toISOString(),
+          unitsCount: Number(d.unitsCount ?? d.UnitsCount ?? 0),
+          cpf: ""
+        })));
+
+        setUnidades((unitsRes || []).map((u) => ({
+          id: Number(u.id ?? u.Id),
+          nome: String(u.name ?? u.Name ?? ""),
+          diretorId: Number(u.directorId ?? u.DirectorId ?? 0),
+          diretorNome: String(u.directorName ?? u.DirectorName ?? ""),
+          ativa: Boolean(u.isActive ?? u.IsActive ?? true),
+          createdAt: u.createdAt ?? u.CreatedAt ?? new Date().toISOString(),
+          usersCount: Number(u.usersCount ?? u.UsersCount ?? 0),
+        })));
+
+        setUsuarios((usersRes || []).map((u) => ({
+          id: Number(u.id ?? u.Id),
+          nome: String(u.name ?? u.Name ?? ""),
+          email: String(u.email ?? u.Email ?? ""),
+          telefone: String(u.phoneNumber ?? u.PhoneNumber ?? ""),
+          ativo: Boolean(u.isActive ?? u.IsActive ?? true),
+          unidadeId: Number(u.unitId ?? u.UnitId ?? 0),
+          unidadeNome: String(u.unitName ?? u.UnitName ?? ""),
+          diretorId: Number(u.directorId ?? u.DirectorId ?? 0),
+          diretorNome: String(u.directorName ?? u.DirectorName ?? ""),
+          materiaisKg: Number(u.totalKg ?? u.TotalKg ?? 0),
+          valorTotal: Number(u.totalMoney ?? u.TotalMoney ?? 0),
+          trocas: Number(u.tradesCount ?? u.TradesCount ?? 0),
+        })));
+      } catch (err) {
+        console.error(err);
+        if (!alive) return;
+        setApiError("Não foi possível carregar os dados do Admin.");
+      } finally {
+        if (!alive) return;
+        setIsLoading(false);
+      }
+    }
+
+    bootstrap();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  async function reloadAdminData() {
+    const [summaryRes, directorsRes, unitsRes, usersRes] = await Promise.all([
+      getAdminSummary(),
+      getAdminDirectors(),
+      getAdminUnits(),
+      getAdminUsers()
+    ]);
+
+    setSummary({
+      directors: Number(summaryRes?.directors || 0),
+      units: Number(summaryRes?.units || 0),
+      users: Number(summaryRes?.users || 0),
+      trades: Number(summaryRes?.trades || 0),
+      kg: Number(summaryRes?.kg || 0),
+      money: Number(summaryRes?.money || 0)
+    });
+
+    setDiretores((directorsRes || []).map((d) => ({
+      id: Number(d.id ?? d.Id),
+      nome: String(d.name ?? d.Name ?? ""),
+      email: String(d.email ?? d.Email ?? ""),
+      telefone: String(d.phoneNumber ?? d.PhoneNumber ?? ""),
+      ativo: Boolean(d.isActive ?? d.IsActive ?? true),
+      createdAt: d.createdAt ?? d.CreatedAt ?? new Date().toISOString(),
+      unitsCount: Number(d.unitsCount ?? d.UnitsCount ?? 0),
+      cpf: ""
+    })));
+
+    setUnidades((unitsRes || []).map((u) => ({
+      id: Number(u.id ?? u.Id),
+      nome: String(u.name ?? u.Name ?? ""),
+      diretorId: Number(u.directorId ?? u.DirectorId ?? 0),
+      diretorNome: String(u.directorName ?? u.DirectorName ?? ""),
+      ativa: Boolean(u.isActive ?? u.IsActive ?? true),
+      createdAt: u.createdAt ?? u.CreatedAt ?? new Date().toISOString(),
+      usersCount: Number(u.usersCount ?? u.UsersCount ?? 0),
+    })));
+
+    setUsuarios((usersRes || []).map((u) => ({
+      id: Number(u.id ?? u.Id),
+      nome: String(u.name ?? u.Name ?? ""),
+      email: String(u.email ?? u.Email ?? ""),
+      telefone: String(u.phoneNumber ?? u.PhoneNumber ?? ""),
+      ativo: Boolean(u.isActive ?? u.IsActive ?? true),
+      unidadeId: Number(u.unitId ?? u.UnitId ?? 0),
+      unidadeNome: String(u.unitName ?? u.UnitName ?? ""),
+      diretorId: Number(u.directorId ?? u.DirectorId ?? 0),
+      diretorNome: String(u.directorName ?? u.DirectorName ?? ""),
+      materiaisKg: Number(u.totalKg ?? u.TotalKg ?? 0),
+      valorTotal: Number(u.totalMoney ?? u.TotalMoney ?? 0),
+      trocas: Number(u.tradesCount ?? u.TradesCount ?? 0),
+    })));
+  }
+
+  // =========================
+  // Helpers
+  // =========================
   const diretoresById = useMemo(() => {
     const map = new Map();
     diretores.forEach((d) => map.set(d.id, d));
@@ -181,27 +279,26 @@ export default function AdminDashboard() {
     return d ? d.nome : "—";
   }
 
-  function usersCountByUnit(unitId) {
-    return usuarios.filter((u) => u.unidadeId === unitId).length;
-  }
-
-  function unitsCountByDirector(directorId) {
-    return unidades.filter((u) => u.diretorId === directorId).length;
-  }
-
   // =========================
-  // Diretores - Criar + Ativar/Desativar + Excluir + Reset Senha
+  // DIRETORES
   // =========================
   function handleChangeNovoDiretor(e) {
     const { name, value } = e.target;
+
     if (name === "cpf") {
       setNovoDiretor((p) => ({ ...p, cpf: formatCPF(value) }));
       return;
     }
+
+    if (name === "telefone") {
+      setNovoDiretor((p) => ({ ...p, telefone: formatPhone(value) }));
+      return;
+    }
+
     setNovoDiretor((p) => ({ ...p, [name]: value }));
   }
 
-  function handleCreateDirector(e) {
+  async function handleCreateDirector(e) {
     e.preventDefault();
 
     if (!novoDiretor.nome.trim()) {
@@ -212,22 +309,12 @@ export default function AdminDashboard() {
       alert("Informe o e-mail do diretor.");
       return;
     }
-    if (!isValidCPFBasic(novoDiretor.cpf)) {
-      alert("CPF inválido. Verifique e tente novamente.");
+    if (novoDiretor.cpf && !isValidCPFBasic(novoDiretor.cpf)) {
+      alert("CPF inválido.");
       return;
     }
-
-    // CPF único
-    const cpfDigits = onlyDigits(novoDiretor.cpf);
-    const cpfJaExiste = diretores.some((d) => onlyDigits(d.cpf) === cpfDigits);
-    if (cpfJaExiste) {
-      alert("Já existe um diretor cadastrado com este CPF.");
-      return;
-    }
-
-    // Senha obrigatória + validação
     if (!novoDiretor.senha) {
-      alert("Informe uma senha para o diretor.");
+      alert("Informe a senha.");
       return;
     }
     if (novoDiretor.senha !== novoDiretor.confirmarSenha) {
@@ -235,108 +322,99 @@ export default function AdminDashboard() {
       return;
     }
     if (!isValidPasswordBasic(novoDiretor.senha)) {
-      alert("Senha fraca. Use no mínimo 8 caracteres, com letras e números.");
+      alert("Senha fraca.");
       return;
     }
 
-    const novoId = Date.now();
+    try {
+      setIsSubmittingDirector(true);
 
-    const novo = {
-      id: novoId,
-      nome: novoDiretor.nome.trim(),
-      email: novoDiretor.email.trim().toLowerCase(),
-      cpf: formatCPF(novoDiretor.cpf),
-      telefone: novoDiretor.telefone.trim(),
-      ativo: true,
-      createdAt: new Date().toISOString(),
-    };
+      await createAdminDirector({
+        name: novoDiretor.nome.trim(),
+        email: novoDiretor.email.trim().toLowerCase(),
+        password: novoDiretor.senha,
+        phoneNumber: novoDiretor.telefone.trim(),
+      });
 
-    setDiretores((prev) => [novo, ...prev]);
+      await reloadAdminData();
 
-    // MOCK de senha no localStorage (substituir por API + hash no backend)
-    localStorage.setItem(directorPwdKeyById(novoId), novoDiretor.senha);
+      setNovoDiretor({
+        nome: "",
+        email: "",
+        cpf: "",
+        telefone: "",
+        senha: "",
+        confirmarSenha: "",
+      });
 
-    setNovoDiretor({
-      nome: "",
-      email: "",
-      cpf: "",
-      telefone: "",
-      senha: "",
-      confirmarSenha: "",
+      logAction(`Diretor criado: ${novoDiretor.nome}`);
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível criar o diretor.");
+    } finally {
+      setIsSubmittingDirector(false);
+    }
+  }
+
+  function requestEditDirector(directorId) {
+    const d = diretores.find((x) => x.id === directorId);
+    if (!d) return;
+
+    setEditDirectorForm({
+      nome: d.nome,
+      email: d.email,
+      telefone: d.telefone || ""
     });
 
-    logAction(`Diretor criado: ${novo.nome} (CPF ${novo.cpf})`);
+    setModal({ type: "editDirector", directorId });
   }
 
-  function handleToggleDirectorActive(directorId) {
-    const d = diretoresById.get(directorId);
-    if (!d) return;
-
-    setDiretores((prev) =>
-      prev.map((x) => (x.id === directorId ? { ...x, ativo: !x.ativo } : x))
-    );
-
-    logAction(`Diretor ${d.ativo ? "desativado" : "ativado"}: ${d.nome}`);
-  }
-
-  function requestDeleteDirector(directorId) {
-    setModal({ type: "confirmDeleteDirector", directorId });
-  }
-
-  function confirmDeleteDirector(directorId) {
-    const d = diretoresById.get(directorId);
-    if (!d) return;
-
-    const countUnits = unitsCountByDirector(directorId);
-    if (countUnits > 0) {
-      alert("Não é possível excluir: este diretor ainda administra unidade(s). Troque o diretor das unidades antes.");
+  async function handleSaveEditDirector(directorId) {
+    if (!editDirectorForm.nome.trim()) {
+      alert("Informe o nome.");
+      return;
+    }
+    if (!editDirectorForm.email.trim()) {
+      alert("Informe o e-mail.");
       return;
     }
 
-    setDiretores((prev) => prev.filter((x) => x.id !== directorId));
-    localStorage.removeItem(directorPwdKeyById(directorId)); // mock
-    setModal(null);
-    logAction(`Diretor excluído: ${d.nome}`);
+    try {
+      await updateAdminDirector(directorId, {
+        name: editDirectorForm.nome.trim(),
+        email: editDirectorForm.email.trim().toLowerCase(),
+        phoneNumber: editDirectorForm.telefone.trim()
+      });
+
+      await reloadAdminData();
+      setModal(null);
+      logAction(`Diretor editado: ${editDirectorForm.nome}`);
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível editar o diretor.");
+    }
   }
 
-  function requestResetDirectorPassword(directorId) {
-    setResetPwdForm({ novaSenha: "", confirmarNovaSenha: "" });
-    setModal({ type: "resetDirectorPassword", directorId });
-  }
-
-  function confirmResetDirectorPassword(directorId) {
-    const d = diretoresById.get(directorId);
-    if (!d) return;
-
-    if (!resetPwdForm.novaSenha) {
-      alert("Informe a nova senha.");
-      return;
+  async function handleDeactivateDirector(directorId) {
+    try {
+      await deactivateAdminDirector(directorId);
+      await reloadAdminData();
+      logAction(`Diretor desativado: ${directorId}`);
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível desativar o diretor.");
     }
-    if (resetPwdForm.novaSenha !== resetPwdForm.confirmarNovaSenha) {
-      alert("As senhas não conferem.");
-      return;
-    }
-    if (!isValidPasswordBasic(resetPwdForm.novaSenha)) {
-      alert("Senha fraca. Use no mínimo 8 caracteres, com letras e números.");
-      return;
-    }
-
-    // MOCK localStorage (backend depois)
-    localStorage.setItem(directorPwdKeyById(directorId), resetPwdForm.novaSenha);
-
-    setModal(null);
-    logAction(`Admin resetou senha do diretor: ${d.nome}`);
   }
 
   // =========================
-  // Unidades - Criar / Editar / Excluir
+  // UNIDADES
   // =========================
   function handleChangeNovaUnidade(e) {
     const { name, value } = e.target;
     setNovaUnidade((p) => ({ ...p, [name]: value }));
   }
 
-  function handleCreateUnit(e) {
+  async function handleCreateUnit(e) {
     e.preventDefault();
 
     if (!novaUnidade.nome.trim()) {
@@ -344,28 +422,32 @@ export default function AdminDashboard() {
       return;
     }
     if (!novaUnidade.diretorId) {
-      alert("Selecione o diretor responsável.");
+      alert("Selecione um diretor.");
       return;
     }
 
-    const diretorExiste = diretoresById.has(Number(novaUnidade.diretorId));
-    if (!diretorExiste) {
-      alert("Diretor inválido.");
-      return;
+    try {
+      setIsSubmittingUnit(true);
+
+      await createAdminUnit({
+        name: novaUnidade.nome.trim(),
+        directorId: Number(novaUnidade.diretorId)
+      });
+
+      await reloadAdminData();
+
+      setNovaUnidade({
+        nome: "",
+        diretorId: "",
+      });
+
+      logAction(`Unidade criada: ${novaUnidade.nome}`);
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível criar a unidade.");
+    } finally {
+      setIsSubmittingUnit(false);
     }
-
-    const unit = {
-      id: Date.now(),
-      nome: novaUnidade.nome.trim(),
-      endereco: (novaUnidade.endereco || "").trim(),
-      diretorId: Number(novaUnidade.diretorId),
-      ativa: true,
-      createdAt: new Date().toISOString(),
-    };
-
-    setUnidades((prev) => [unit, ...prev]);
-    setNovaUnidade({ nome: "", endereco: "", diretorId: "" });
-    logAction(`Unidade criada: ${unit.nome} (Diretor: ${getDiretorName(unit.diretorId)})`);
   }
 
   function requestEditUnit(unitId) {
@@ -374,85 +456,64 @@ export default function AdminDashboard() {
 
     setEditUnitForm({
       nome: u.nome,
-      endereco: u.endereco || "",
-      diretorId: String(u.diretorId || ""),
-      ativa: !!u.ativa,
+      diretorId: String(u.diretorId || "")
     });
 
     setModal({ type: "editUnit", unitId });
   }
 
-  function handleSaveEditUnit(unitId) {
-    const u = unidades.find((x) => x.id === unitId);
-    if (!u) return;
-
+  async function handleSaveEditUnit(unitId) {
     if (!editUnitForm.nome.trim()) {
       alert("Informe o nome da unidade.");
       return;
     }
     if (!editUnitForm.diretorId) {
-      alert("Selecione o diretor responsável.");
+      alert("Selecione um diretor.");
       return;
     }
 
-    const novoDiretorId = Number(editUnitForm.diretorId);
-    const diretorExiste = diretoresById.has(novoDiretorId);
-    if (!diretorExiste) {
-      alert("Diretor inválido.");
-      return;
+    try {
+      await updateAdminUnit(unitId, {
+        name: editUnitForm.nome.trim(),
+        directorId: Number(editUnitForm.diretorId)
+      });
+
+      await reloadAdminData();
+      setModal(null);
+      logAction(`Unidade editada: ${editUnitForm.nome}`);
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível editar a unidade.");
     }
-
-    setUnidades((prev) =>
-      prev.map((x) =>
-        x.id === unitId
-          ? {
-              ...x,
-              nome: editUnitForm.nome.trim(),
-              endereco: editUnitForm.endereco.trim(),
-              diretorId: novoDiretorId,
-              ativa: !!editUnitForm.ativa,
-            }
-          : x
-      )
-    );
-
-    const diretorAntes = getDiretorName(u.diretorId);
-    const diretorDepois = getDiretorName(novoDiretorId);
-    logAction(`Unidade editada: ${u.nome} → ${editUnitForm.nome.trim()} | Diretor: ${diretorAntes} → ${diretorDepois}`);
-
-    setModal(null);
   }
 
-  function requestDeleteUnit(unitId) {
-    setModal({ type: "confirmDeleteUnit", unitId });
-  }
-
-  function confirmDeleteUnit(unitId) {
-    const unit = unidades.find((u) => u.id === unitId);
-    if (!unit) return;
-
-    const qtdUsers = usersCountByUnit(unitId);
-    if (qtdUsers > 0) {
-      alert("Não é possível excluir: esta unidade possui usuários vinculados. Remova/migre os usuários primeiro.");
-      return;
+  async function handleDeactivateUnit(unitId) {
+    try {
+      await deactivateAdminUnit(unitId);
+      await reloadAdminData();
+      logAction(`Unidade desativada: ${unitId}`);
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível desativar a unidade.");
     }
-
-    setUnidades((prev) => prev.filter((x) => x.id !== unitId));
-    setModal(null);
-    logAction(`Unidade excluída: ${unit.nome}`);
   }
 
   // =========================
-  // Usuários - Ações globais do admin
+  // USUÁRIOS
   // =========================
-  function toggleUserActive(userId) {
-    const u = usuarios.find((x) => x.id === userId);
-    setUsuarios((prev) => prev.map((x) => (x.id === userId ? { ...x, ativo: !x.ativo } : x)));
-    if (u) logAction(`Usuário ${u.ativo ? "desativado" : "ativado"}: ${u.nome}`);
+  async function handleDeactivateUser(userId) {
+    try {
+      await deactivateAdminUser(userId);
+      await reloadAdminData();
+      logAction(`Usuário desativado: ${userId}`);
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível desativar o usuário.");
+    }
   }
 
   // =========================
-  // Listas filtradas
+  // FILTROS
   // =========================
   const diretoresFiltrados = useMemo(() => {
     const q = filtroDiretor.toLowerCase().trim();
@@ -462,13 +523,12 @@ export default function AdminDashboard() {
         return (
           (d.nome || "").toLowerCase().includes(q) ||
           (d.email || "").toLowerCase().includes(q) ||
-          onlyDigits(d.cpf || "").includes(onlyDigits(q))
+          (d.telefone || "").toLowerCase().includes(q)
         );
       })
       .sort((a, b) => {
         if (ordenacaoDiretor === "nomeAsc") return a.nome.localeCompare(b.nome);
         if (ordenacaoDiretor === "nomeDesc") return b.nome.localeCompare(a.nome);
-        if (ordenacaoDiretor === "recente") return new Date(b.createdAt) - new Date(a.createdAt);
         if (ordenacaoDiretor === "ativo") return Number(b.ativo) - Number(a.ativo);
         return 0;
       });
@@ -481,28 +541,26 @@ export default function AdminDashboard() {
         if (!q) return true;
         return (
           (u.nome || "").toLowerCase().includes(q) ||
-          (u.endereco || "").toLowerCase().includes(q) ||
-          getDiretorName(u.diretorId).toLowerCase().includes(q)
+          (u.diretorNome || "").toLowerCase().includes(q)
         );
       })
       .sort((a, b) => {
         if (ordenacaoUnidade === "nomeAsc") return a.nome.localeCompare(b.nome);
-        if (ordenacaoUnidade === "recente") return new Date(b.createdAt) - new Date(a.createdAt);
         if (ordenacaoUnidade === "diretor") return getDiretorName(a.diretorId).localeCompare(getDiretorName(b.diretorId));
         return 0;
       });
-  }, [unidades, filtroUnidade, ordenacaoUnidade, diretoresById]);
+  }, [unidades, filtroUnidade, ordenacaoUnidade, diretores]);
 
   const usuariosFiltrados = useMemo(() => {
     const q = filtroUsuario.toLowerCase().trim();
     return [...usuarios]
       .filter((u) => {
         if (!q) return true;
-        const unidadeName = unidades.find((x) => x.id === u.unidadeId)?.nome || "";
         return (
           (u.nome || "").toLowerCase().includes(q) ||
           (u.email || "").toLowerCase().includes(q) ||
-          unidadeName.toLowerCase().includes(q)
+          (u.unidadeNome || "").toLowerCase().includes(q) ||
+          (u.diretorNome || "").toLowerCase().includes(q)
         );
       })
       .sort((a, b) => {
@@ -510,31 +568,40 @@ export default function AdminDashboard() {
         if (ordenacaoUsuario === "kgDesc") return (b.materiaisKg || 0) - (a.materiaisKg || 0);
         if (ordenacaoUsuario === "valorDesc") return (b.valorTotal || 0) - (a.valorTotal || 0);
         if (ordenacaoUsuario === "trocasDesc") return (b.trocas || 0) - (a.trocas || 0);
-        if (ordenacaoUsuario === "unidade") {
-          const au = unidades.find((x) => x.id === a.unidadeId)?.nome || "";
-          const bu = unidades.find((x) => x.id === b.unidadeId)?.nome || "";
-          return au.localeCompare(bu);
-        }
+        if (ordenacaoUsuario === "unidade") return (a.unidadeNome || "").localeCompare(b.unidadeNome || "");
         return 0;
       });
-  }, [usuarios, filtroUsuario, ordenacaoUsuario, unidades]);
+  }, [usuarios, filtroUsuario, ordenacaoUsuario]);
 
   // ===== KPIs =====
-  const totalDiretores = diretores.length;
-  const totalUnidades = unidades.length;
-  const totalUsuarios = usuarios.length;
-  const totalKg = usuarios.reduce((acc, u) => acc + (u.materiaisKg || 0), 0);
-  const totalR$ = usuarios.reduce((acc, u) => acc + (u.valorTotal || 0), 0);
+  const totalDiretores = summary.directors;
+  const totalUnidades = summary.units;
+  const totalUsuarios = summary.users;
+  const totalTrades = summary.trades;
+  const totalKg = summary.kg;
+  const totalR$ = summary.money;
 
   return (
     <main className="dashboard-page">
+      {apiError && (
+        <div className="dash-alert dash-alert-danger" style={{ marginBottom: "1rem" }}>
+          {apiError}
+        </div>
+      )}
+
+      {isLoading && !apiError && (
+        <div className="dash-alert" style={{ marginBottom: "1rem" }}>
+          Carregando dados do Admin...
+        </div>
+      )}
+
       <div className="dashboard-shell">
         <header className="dashboard-topbar">
           <div className="topbar-left">
             <div className="app-logo-circle">18</div>
             <div className="app-title-group">
               <h1 className="app-title">Cofrinho dos 18</h1>
-              <span className="app-subtitle">Painel do administrador (super admin)</span>
+              <span className="app-subtitle">Painel do administrador</span>
             </div>
           </div>
 
@@ -557,22 +624,24 @@ export default function AdminDashboard() {
             <div className="dash-card">
               <span className="dash-card-label">Diretores</span>
               <strong className="dash-card-number">{totalDiretores}</strong>
-              <p className="dash-card-foot">Cadastro, status e senha (reset)</p>
+              <p className="dash-card-foot">Ativos no sistema</p>
             </div>
             <div className="dash-card">
               <span className="dash-card-label">Unidades</span>
               <strong className="dash-card-number">{totalUnidades}</strong>
-              <p className="dash-card-foot">Editar e trocar diretor responsável</p>
+              <p className="dash-card-foot">Ativas no sistema</p>
             </div>
             <div className="dash-card">
-              <span className="dash-card-label">Usuários (global)</span>
+              <span className="dash-card-label">Usuários</span>
               <strong className="dash-card-number">{totalUsuarios}</strong>
-              <p className="dash-card-foot">Ativar/desativar para suporte</p>
+              <p className="dash-card-foot">Usuários ativos</p>
             </div>
             <div className="dash-card dash-card-pill">
               <span className="dash-card-label">Impacto total</span>
-              <strong className="dash-card-number">{totalKg.toFixed(2)} kg • R$ {totalR$.toFixed(2)}</strong>
-              <p className="dash-card-foot">Somatório do sistema</p>
+              <strong className="dash-card-number">
+                {Number(totalKg).toFixed(2)} kg • R$ {Number(totalR$).toFixed(2)}
+              </strong>
+              <p className="dash-card-foot">Trocas: {totalTrades}</p>
             </div>
           </section>
 
@@ -580,26 +649,22 @@ export default function AdminDashboard() {
             <section className="dashboard-content-grid">
               <div className="dash-card">
                 <h2 className="dash-section-title">Ações rápidas</h2>
-                <p className="dash-section-subtitle">Este é o “super dashboard” de controle total do site.</p>
+                <p className="dash-section-subtitle">Controle global do sistema.</p>
 
                 <div className="quick-actions">
                   <button className="btn-laranja" onClick={() => setTab("diretores")}>Cadastrar diretor</button>
-                  <button className="btn-outline" onClick={() => setTab("unidades")}>Criar/editar unidade</button>
+                  <button className="btn-outline" onClick={() => setTab("unidades")}>Criar unidade</button>
                   <button className="btn-outline" onClick={() => setTab("usuarios")}>Ver usuários</button>
-                </div>
-
-                <div className="dash-hint">
-                  Quando tiver API/SQL Server: todas as ações aqui devem exigir token do admin e registrar auditoria (before/after).
                 </div>
               </div>
 
               <div className="dash-card">
-                <h2 className="dash-section-title">Boas práticas recomendadas</h2>
+                <h2 className="dash-section-title">Status do sistema</h2>
                 <ul className="dash-ul">
-                  <li><strong>Reset de senha:</strong> admin redefine, mas nunca “vê” a senha.</li>
-                  <li><strong>Diretor pode trocar senha:</strong> autonomia no painel dele.</li>
-                  <li><strong>Exclusão segura:</strong> diretor só exclui se não tiver unidades; unidade só exclui se não tiver usuários.</li>
-                  <li><strong>Desativação:</strong> preferível a excluir em muitos casos (mantém histórico).</li>
+                  <li><strong>Diretores:</strong> criar, editar e desativar.</li>
+                  <li><strong>Unidades:</strong> criar, editar e desativar.</li>
+                  <li><strong>Usuários:</strong> visão global e desativação.</li>
+                  <li><strong>Resumo:</strong> real com trades, kg e valor.</li>
                 </ul>
               </div>
             </section>
@@ -609,7 +674,7 @@ export default function AdminDashboard() {
             <section className="dashboard-content-grid">
               <div className="dash-card">
                 <h2 className="dash-section-title">Cadastrar diretor</h2>
-                <p className="dash-section-subtitle">CPF e senha são obrigatórios. Senha: mínimo 8, com letras e números.</p>
+                <p className="dash-section-subtitle">Criação real no banco.</p>
 
                 <form className="dash-form" onSubmit={handleCreateDirector}>
                   <div className="dash-form-group">
@@ -624,19 +689,23 @@ export default function AdminDashboard() {
 
                   <div className="dash-form-row">
                     <div className="dash-form-group">
-                      <label>CPF</label>
+                      <label>CPF (visual)</label>
                       <input
                         name="cpf"
                         value={novoDiretor.cpf}
                         onChange={handleChangeNovoDiretor}
                         placeholder="000.000.000-00"
-                        inputMode="numeric"
-                        required
                       />
                     </div>
+
                     <div className="dash-form-group">
-                      <label>Telefone (opcional)</label>
-                      <input name="telefone" value={novoDiretor.telefone} onChange={handleChangeNovoDiretor} placeholder="(xx) xxxxx-xxxx" />
+                      <label>Telefone</label>
+                      <input
+                        name="telefone"
+                        value={novoDiretor.telefone}
+                        onChange={handleChangeNovoDiretor}
+                        placeholder="(xx) xxxxx-xxxx"
+                      />
                     </div>
                   </div>
 
@@ -657,23 +726,29 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <button type="submit" className="btn-laranja btn-full">Criar diretor</button>
+                  <button type="submit" className="btn-laranja btn-full" disabled={isSubmittingDirector}>
+                    {isSubmittingDirector ? "Criando..." : "Criar diretor"}
+                  </button>
                 </form>
-
-                <div className="dash-hint">
-                  (Mock) Senha está indo para localStorage apenas para testar o fluxo. No backend: salvar apenas hash + auditoria.
-                </div>
               </div>
 
               <div className="dash-card">
                 <h2 className="dash-section-title">Diretores cadastrados</h2>
 
                 <div className="dash-filters">
-                  <input className="dash-filter-input" placeholder="Buscar por nome, email ou CPF..." value={filtroDiretor} onChange={(e) => setFiltroDiretor(e.target.value)} />
-                  <select className="dash-filter-select" value={ordenacaoDiretor} onChange={(e) => setOrdenacaoDiretor(e.target.value)}>
+                  <input
+                    className="dash-filter-input"
+                    placeholder="Buscar por nome, email ou telefone..."
+                    value={filtroDiretor}
+                    onChange={(e) => setFiltroDiretor(e.target.value)}
+                  />
+                  <select
+                    className="dash-filter-select"
+                    value={ordenacaoDiretor}
+                    onChange={(e) => setOrdenacaoDiretor(e.target.value)}
+                  >
                     <option value="nomeAsc">Nome (A–Z)</option>
                     <option value="nomeDesc">Nome (Z–A)</option>
-                    <option value="recente">Mais recentes</option>
                     <option value="ativo">Ativos primeiro</option>
                   </select>
                 </div>
@@ -684,38 +759,32 @@ export default function AdminDashboard() {
                       <tr>
                         <th>Nome</th>
                         <th>E-mail</th>
-                        <th>CPF</th>
+                        <th>Telefone</th>
                         <th>Status</th>
                         <th>Unidades</th>
                         <th className="th-actions">Ações</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {diretoresFiltrados.map((d) => {
-                        const unitsCount = unitsCountByDirector(d.id);
-                        return (
-                          <tr key={d.id}>
-                            <td>{d.nome}</td>
-                            <td>{d.email}</td>
-                            <td className="td-muted">{d.cpf}</td>
-                            <td>
-                              <span className={`status-pill ${d.ativo ? "status-ok" : "status-off"}`}>
-                                {d.ativo ? "Ativo" : "Inativo"}
-                              </span>
-                            </td>
-                            <td>{unitsCount}</td>
-                            <td>
-                              <div className="table-actions">
-                                <button className="btn-outline btn-xs" onClick={() => requestResetDirectorPassword(d.id)}>Resetar senha</button>
-                                <button className="btn-outline btn-xs" onClick={() => handleToggleDirectorActive(d.id)}>{d.ativo ? "Desativar" : "Ativar"}</button>
-                                <button className="btn-danger btn-xs" onClick={() => requestDeleteDirector(d.id)}>Excluir</button>
-                              </div>
-                              {unitsCount > 0 && <div className="mini-warning">Para excluir, transfira as unidades antes.</div>}
-                            </td>
-                          </tr>
-                        );
-                      })}
-
+                      {diretoresFiltrados.map((d) => (
+                        <tr key={d.id}>
+                          <td>{d.nome}</td>
+                          <td>{d.email}</td>
+                          <td>{d.telefone || "—"}</td>
+                          <td>
+                            <span className={`status-pill ${d.ativo ? "status-ok" : "status-off"}`}>
+                              {d.ativo ? "Ativo" : "Inativo"}
+                            </span>
+                          </td>
+                          <td>{d.unitsCount || 0}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn-outline btn-xs" onClick={() => requestEditDirector(d.id)}>Editar</button>
+                              <button className="btn-danger btn-xs" onClick={() => handleDeactivateDirector(d.id)}>Desativar</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                       {diretoresFiltrados.length === 0 && (
                         <tr><td colSpan="6">Nenhum diretor encontrado.</td></tr>
                       )}
@@ -730,7 +799,7 @@ export default function AdminDashboard() {
             <section className="dashboard-content-grid">
               <div className="dash-card">
                 <h2 className="dash-section-title">Criar unidade</h2>
-                <p className="dash-section-subtitle">A unidade deve ter 1 diretor responsável.</p>
+                <p className="dash-section-subtitle">Cada unidade possui um diretor responsável.</p>
 
                 <form className="dash-form" onSubmit={handleCreateUnit}>
                   <div className="dash-form-group">
@@ -739,37 +808,38 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="dash-form-group">
-                    <label>Endereço (opcional)</label>
-                    <input name="endereco" value={novaUnidade.endereco} onChange={handleChangeNovaUnidade} />
-                  </div>
-
-                  <div className="dash-form-group">
                     <label>Diretor responsável</label>
                     <select name="diretorId" value={novaUnidade.diretorId} onChange={handleChangeNovaUnidade} required>
                       <option value="">Selecione um diretor</option>
                       {diretores.filter((d) => d.ativo).map((d) => (
-                        <option key={d.id} value={d.id}>{d.nome} (ativo)</option>
+                        <option key={d.id} value={d.id}>{d.nome}</option>
                       ))}
                     </select>
                   </div>
 
-                  <button type="submit" className="btn-laranja btn-full">Criar unidade</button>
+                  <button type="submit" className="btn-laranja btn-full" disabled={isSubmittingUnit}>
+                    {isSubmittingUnit ? "Criando..." : "Criar unidade"}
+                  </button>
                 </form>
-
-                <div className="dash-hint">
-                  Ao editar unidade, você pode trocar o diretor. No backend: registrar auditoria do “antes/depois”.
-                </div>
               </div>
 
               <div className="dash-card">
                 <h2 className="dash-section-title">Unidades cadastradas</h2>
 
                 <div className="dash-filters">
-                  <input className="dash-filter-input" placeholder="Buscar por unidade, endereço ou diretor..." value={filtroUnidade} onChange={(e) => setFiltroUnidade(e.target.value)} />
-                  <select className="dash-filter-select" value={ordenacaoUnidade} onChange={(e) => setOrdenacaoUnidade(e.target.value)}>
+                  <input
+                    className="dash-filter-input"
+                    placeholder="Buscar por unidade ou diretor..."
+                    value={filtroUnidade}
+                    onChange={(e) => setFiltroUnidade(e.target.value)}
+                  />
+                  <select
+                    className="dash-filter-select"
+                    value={ordenacaoUnidade}
+                    onChange={(e) => setOrdenacaoUnidade(e.target.value)}
+                  >
                     <option value="nomeAsc">Nome (A–Z)</option>
                     <option value="diretor">Diretor (A–Z)</option>
-                    <option value="recente">Mais recentes</option>
                   </select>
                 </div>
 
@@ -785,32 +855,24 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {unidadesFiltradas.map((u) => {
-                        const qtdUsers = usersCountByUnit(u.id);
-                        return (
-                          <tr key={u.id}>
-                            <td>
-                              <div className="td-strong">{u.nome}</div>
-                              {u.endereco ? <div className="td-muted">{u.endereco}</div> : null}
-                            </td>
-                            <td>{getDiretorName(u.diretorId)}</td>
-                            <td>
-                              <span className={`status-pill ${u.ativa ? "status-ok" : "status-off"}`}>
-                                {u.ativa ? "Ativa" : "Inativa"}
-                              </span>
-                            </td>
-                            <td>{qtdUsers}</td>
-                            <td>
-                              <div className="table-actions">
-                                <button className="btn-outline btn-xs" onClick={() => requestEditUnit(u.id)}>Editar</button>
-                                <button className="btn-danger btn-xs" onClick={() => requestDeleteUnit(u.id)}>Excluir</button>
-                              </div>
-                              {qtdUsers > 0 && <div className="mini-warning">Para excluir, migre/remova os usuários antes.</div>}
-                            </td>
-                          </tr>
-                        );
-                      })}
-
+                      {unidadesFiltradas.map((u) => (
+                        <tr key={u.id}>
+                          <td>{u.nome}</td>
+                          <td>{u.diretorNome || getDiretorName(u.diretorId)}</td>
+                          <td>
+                            <span className={`status-pill ${u.ativa ? "status-ok" : "status-off"}`}>
+                              {u.ativa ? "Ativa" : "Inativa"}
+                            </span>
+                          </td>
+                          <td>{u.usersCount || 0}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button className="btn-outline btn-xs" onClick={() => requestEditUnit(u.id)}>Editar</button>
+                              <button className="btn-danger btn-xs" onClick={() => handleDeactivateUnit(u.id)}>Desativar</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                       {unidadesFiltradas.length === 0 && (
                         <tr><td colSpan="5">Nenhuma unidade encontrada.</td></tr>
                       )}
@@ -824,11 +886,20 @@ export default function AdminDashboard() {
           {tab === "usuarios" && (
             <section className="dash-card">
               <h2 className="dash-section-title">Usuários do sistema</h2>
-              <p className="dash-section-subtitle">Visão global do admin. O cadastro de usuários é feito pelo diretor.</p>
+              <p className="dash-section-subtitle">Visão global real do admin.</p>
 
               <div className="dash-filters">
-                <input className="dash-filter-input" placeholder="Buscar por nome, email ou unidade..." value={filtroUsuario} onChange={(e) => setFiltroUsuario(e.target.value)} />
-                <select className="dash-filter-select" value={ordenacaoUsuario} onChange={(e) => setOrdenacaoUsuario(e.target.value)}>
+                <input
+                  className="dash-filter-input"
+                  placeholder="Buscar por nome, email, unidade ou diretor..."
+                  value={filtroUsuario}
+                  onChange={(e) => setFiltroUsuario(e.target.value)}
+                />
+                <select
+                  className="dash-filter-select"
+                  value={ordenacaoUsuario}
+                  onChange={(e) => setOrdenacaoUsuario(e.target.value)}
+                >
                   <option value="nomeAsc">Nome (A–Z)</option>
                   <option value="unidade">Unidade (A–Z)</option>
                   <option value="kgDesc">Mais material (kg)</option>
@@ -844,6 +915,7 @@ export default function AdminDashboard() {
                       <th>Nome</th>
                       <th>E-mail</th>
                       <th>Unidade</th>
+                      <th>Diretor</th>
                       <th>Status</th>
                       <th>Kg</th>
                       <th>R$</th>
@@ -852,34 +924,29 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {usuariosFiltrados.map((u) => {
-                      const unitName = unidades.find((x) => x.id === u.unidadeId)?.nome || "—";
-                      return (
-                        <tr key={u.id}>
-                          <td>{u.nome}</td>
-                          <td className="td-muted">{u.email}</td>
-                          <td>{unitName}</td>
-                          <td>
-                            <span className={`status-pill ${u.ativo ? "status-ok" : "status-off"}`}>
-                              {u.ativo ? "Ativo" : "Inativo"}
-                            </span>
-                          </td>
-                          <td>{(u.materiaisKg || 0).toFixed(2)}</td>
-                          <td>R$ {(u.valorTotal || 0).toFixed(2)}</td>
-                          <td>{u.trocas || 0}</td>
-                          <td>
-                            <div className="table-actions">
-                              <button className="btn-outline btn-xs" onClick={() => toggleUserActive(u.id)}>
-                                {u.ativo ? "Desativar" : "Ativar"}
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-
+                    {usuariosFiltrados.map((u) => (
+                      <tr key={u.id}>
+                        <td>{u.nome}</td>
+                        <td>{u.email}</td>
+                        <td>{u.unidadeNome || "—"}</td>
+                        <td>{u.diretorNome || "—"}</td>
+                        <td>
+                          <span className={`status-pill ${u.ativo ? "status-ok" : "status-off"}`}>
+                            {u.ativo ? "Ativo" : "Inativo"}
+                          </span>
+                        </td>
+                        <td>{Number(u.materiaisKg || 0).toFixed(2)}</td>
+                        <td>R$ {Number(u.valorTotal || 0).toFixed(2)}</td>
+                        <td>{u.trocas || 0}</td>
+                        <td>
+                          <div className="table-actions">
+                            <button className="btn-danger btn-xs" onClick={() => handleDeactivateUser(u.id)}>Desativar</button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                     {usuariosFiltrados.length === 0 && (
-                      <tr><td colSpan="8">Nenhum usuário encontrado.</td></tr>
+                      <tr><td colSpan="9">Nenhum usuário encontrado.</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -889,8 +956,8 @@ export default function AdminDashboard() {
 
           {tab === "auditoria" && (
             <section className="dash-card">
-              <h2 className="dash-section-title">Auditoria (log do admin)</h2>
-              <p className="dash-section-subtitle">Por enquanto mock. No backend, gravar no banco com before/after.</p>
+              <h2 className="dash-section-title">Auditoria</h2>
+              <p className="dash-section-subtitle">Visual temporária. Depois vamos ligar ao banco.</p>
 
               <div className="dash-table-wrapper">
                 <table className="dash-table">
@@ -919,66 +986,73 @@ export default function AdminDashboard() {
           )}
         </div>
 
-        {/* ===================== MODAIS ===================== */}
-        {modal?.type === "confirmDeleteDirector" && (
-          <div className="modal-backdrop" role="dialog" aria-modal="true">
-            <div className="modal-card">
-              <h3 className="modal-title">Excluir diretor</h3>
-              <p className="modal-text">Tem certeza? Você só conseguirá excluir se este diretor não tiver unidades vinculadas.</p>
-              <div className="modal-actions">
-                <button className="btn-outline" onClick={() => setModal(null)}>Cancelar</button>
-                <button className="btn-danger" onClick={() => confirmDeleteDirector(modal.directorId)}>Confirmar exclusão</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {modal?.type === "confirmDeleteUnit" && (
-          <div className="modal-backdrop" role="dialog" aria-modal="true">
-            <div className="modal-card">
-              <h3 className="modal-title">Excluir unidade</h3>
-              <p className="modal-text">Tem certeza? Você só conseguirá excluir se a unidade não tiver usuários vinculados.</p>
-              <div className="modal-actions">
-                <button className="btn-outline" onClick={() => setModal(null)}>Cancelar</button>
-                <button className="btn-danger" onClick={() => confirmDeleteUnit(modal.unitId)}>Confirmar exclusão</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {modal?.type === "editUnit" && (
+        {/* MODAL EDITAR DIRETOR */}
+        {modal?.type === "editDirector" && (
           <div className="modal-backdrop" role="dialog" aria-modal="true">
             <div className="modal-card modal-card-wide">
-              <h3 className="modal-title">Editar unidade</h3>
-              <p className="modal-text">Altere nome/endereço, status e troque o diretor responsável.</p>
+              <h3 className="modal-title">Editar diretor</h3>
+              <p className="modal-text">Atualize os dados do diretor.</p>
 
               <div className="dash-form">
                 <div className="dash-form-group">
                   <label>Nome</label>
-                  <input value={editUnitForm.nome} onChange={(e) => setEditUnitForm((p) => ({ ...p, nome: e.target.value }))} />
+                  <input
+                    value={editDirectorForm.nome}
+                    onChange={(e) => setEditDirectorForm((p) => ({ ...p, nome: e.target.value }))}
+                  />
                 </div>
 
                 <div className="dash-form-group">
-                  <label>Endereço</label>
-                  <input value={editUnitForm.endereco} onChange={(e) => setEditUnitForm((p) => ({ ...p, endereco: e.target.value }))} />
+                  <label>E-mail</label>
+                  <input
+                    value={editDirectorForm.email}
+                    onChange={(e) => setEditDirectorForm((p) => ({ ...p, email: e.target.value }))}
+                  />
+                </div>
+
+                <div className="dash-form-group">
+                  <label>Telefone</label>
+                  <input
+                    value={editDirectorForm.telefone}
+                    onChange={(e) => setEditDirectorForm((p) => ({ ...p, telefone: formatPhone(e.target.value) }))}
+                  />
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button className="btn-outline" onClick={() => setModal(null)}>Cancelar</button>
+                <button className="btn-laranja" onClick={() => handleSaveEditDirector(modal.directorId)}>Salvar alterações</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL EDITAR UNIDADE */}
+        {modal?.type === "editUnit" && (
+          <div className="modal-backdrop" role="dialog" aria-modal="true">
+            <div className="modal-card modal-card-wide">
+              <h3 className="modal-title">Editar unidade</h3>
+              <p className="modal-text">Atualize os dados da unidade.</p>
+
+              <div className="dash-form">
+                <div className="dash-form-group">
+                  <label>Nome</label>
+                  <input
+                    value={editUnitForm.nome}
+                    onChange={(e) => setEditUnitForm((p) => ({ ...p, nome: e.target.value }))}
+                  />
                 </div>
 
                 <div className="dash-form-group">
                   <label>Diretor responsável</label>
-                  <select value={editUnitForm.diretorId} onChange={(e) => setEditUnitForm((p) => ({ ...p, diretorId: e.target.value }))}>
-                    {diretores.map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.nome} {d.ativo ? "(ativo)" : "(inativo)"}
-                      </option>
+                  <select
+                    value={editUnitForm.diretorId}
+                    onChange={(e) => setEditUnitForm((p) => ({ ...p, diretorId: e.target.value }))}
+                  >
+                    <option value="">Selecione...</option>
+                    {diretores.filter((d) => d.ativo).map((d) => (
+                      <option key={d.id} value={d.id}>{d.nome}</option>
                     ))}
-                  </select>
-                </div>
-
-                <div className="dash-form-group">
-                  <label>Status da unidade</label>
-                  <select value={editUnitForm.ativa ? "ativa" : "inativa"} onChange={(e) => setEditUnitForm((p) => ({ ...p, ativa: e.target.value === "ativa" }))}>
-                    <option value="ativa">Ativa</option>
-                    <option value="inativa">Inativa</option>
                   </select>
                 </div>
               </div>
@@ -986,34 +1060,6 @@ export default function AdminDashboard() {
               <div className="modal-actions">
                 <button className="btn-outline" onClick={() => setModal(null)}>Cancelar</button>
                 <button className="btn-laranja" onClick={() => handleSaveEditUnit(modal.unitId)}>Salvar alterações</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {modal?.type === "resetDirectorPassword" && (
-          <div className="modal-backdrop" role="dialog" aria-modal="true">
-            <div className="modal-card">
-              <h3 className="modal-title">Resetar senha do diretor</h3>
-              <p className="modal-text">Defina uma nova senha. O diretor poderá trocar depois no próprio painel.</p>
-
-              <div className="dash-form">
-                <div className="dash-form-group">
-                  <label>Nova senha</label>
-                  <input type="password" value={resetPwdForm.novaSenha} onChange={(e) => setResetPwdForm((p) => ({ ...p, novaSenha: e.target.value }))} />
-                </div>
-                <div className="dash-form-group">
-                  <label>Confirmar nova senha</label>
-                  <input type="password" value={resetPwdForm.confirmarNovaSenha} onChange={(e) => setResetPwdForm((p) => ({ ...p, confirmarNovaSenha: e.target.value }))} />
-                </div>
-                <div className="dash-hint">
-                  Regras: mínimo 8 caracteres, com letras e números.
-                </div>
-              </div>
-
-              <div className="modal-actions">
-                <button className="btn-outline" onClick={() => setModal(null)}>Cancelar</button>
-                <button className="btn-laranja" onClick={() => confirmResetDirectorPassword(modal.directorId)}>Confirmar reset</button>
               </div>
             </div>
           </div>
