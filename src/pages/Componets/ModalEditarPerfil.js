@@ -1,6 +1,6 @@
 // src/components/ModalEditarPerfil.js
 import { useState, useRef } from 'react';
-import UserService from '../../Services/UserService';
+import UserService from '../../services/UserService';
 import '../../styles/ModalEditarPerfil.css';
 
 const ModalEditarPerfil = ({ onClose }) => {

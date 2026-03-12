@@ -4,7 +4,7 @@ import ModalLancamentos from './Componets/ModalLancamentos';
 import ModalRankingSemanal from './Componets/ModalRankingSemanal';
 import ModalEditarPerfil from './Componets/ModalEditarPerfil';
 import ModalPersonalizarPorquinho from './Componets/ModalPersonalizarPorquinho';
-import UserService from '../Services/UserService';
+import UserService from '../services/UserService';
 import '../styles/Principal.css';
 import perfilPadrao from '../assets/principal/perfil.png';
 import porquinho from '../assets/principal/porquinho2d.png'; 

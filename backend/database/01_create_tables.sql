@@ -1,0 +1,72 @@
+CREATE TABLE Users (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(150) NOT NULL,
+    Email NVARCHAR(150) NOT NULL UNIQUE,
+    CPF NVARCHAR(14) NULL,
+    Role NVARCHAR(20) NOT NULL, -- ADMIN, DIRECTOR, USER
+    PasswordHash NVARCHAR(255) NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE Units (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(150) NOT NULL,
+    Address NVARCHAR(255) NULL,
+    DirectorId INT NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+
+    CONSTRAINT FK_Units_Director
+        FOREIGN KEY (DirectorId) REFERENCES Users(Id)
+);
+
+CREATE TABLE UserUnits (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    UnitId INT NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    StartDate DATETIME NOT NULL DEFAULT GETDATE(),
+    EndDate DATETIME NULL,
+
+    CONSTRAINT FK_UserUnits_User
+        FOREIGN KEY (UserId) REFERENCES Users(Id),
+
+    CONSTRAINT FK_UserUnits_Unit
+        FOREIGN KEY (UnitId) REFERENCES Units(Id)
+);
+
+CREATE TABLE Trades (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    MaterialType NVARCHAR(50) NOT NULL,
+    WeightKg DECIMAL(10,2) NOT NULL CHECK (WeightKg > 0),
+    AmountMoney DECIMAL(10,2) NOT NULL CHECK (AmountMoney >= 0),
+    Notes NVARCHAR(255) NULL,
+    CreatedByDirectorId INT NOT NULL,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+
+    CONSTRAINT FK_Trades_User
+        FOREIGN KEY (UserId) REFERENCES Users(Id),
+
+    CONSTRAINT FK_Trades_Director
+        FOREIGN KEY (CreatedByDirectorId) REFERENCES Users(Id)
+);
+
+CREATE TABLE Challenges (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UnitId INT NULL,
+    CreatedByDirectorId INT NOT NULL,
+    Title NVARCHAR(150) NOT NULL,
+    Description NVARCHAR(500) NOT NULL,
+    TargetKg DECIMAL(10,2) NULL,
+    StartsAt DATETIME NOT NULL,
+    EndsAt DATETIME NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+
+    CONSTRAINT FK_Challenges_Unit
+        FOREIGN KEY (UnitId) REFERENCES Units(Id),
+
+    CONSTRAINT FK_Challenges_Director
+        FOREIGN KEY (CreatedByDirectorId) REFERENCES Users(Id)
+);
