@@ -77,6 +77,12 @@ export const deactivateAdminUser = (userId) =>
     method: "POST",
   });
 
+  export const resetAdminDirectorPassword = (directorId, payload) =>
+  request(`/api/Admin/directors/${directorId}/reset-password`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
 // ==========================
 // UNIDADES / DIRETOR
 // ==========================
@@ -160,3 +166,12 @@ export const getUnitChallenges = (unitId, activeOnly = true) =>
 
 export const getChallengeProgress = (challengeId) =>
   request(`/api/Challenges/${challengeId}/progress`);
+
+// ==========================
+// AUTH
+// ==========================
+export const login = (payload) =>
+  request("/api/Auth/login", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });

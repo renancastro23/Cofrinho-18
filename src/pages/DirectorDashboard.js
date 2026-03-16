@@ -67,10 +67,19 @@ function formatPhone(value) {
 }
 
 export default function DirectorDashboard() {
-  // ======= Simulação do diretor logado =======
-  // Quando você integrar login de verdade, esse id deve vir do token/user logado.
-  const DIRECTOR_ID = Number(localStorage.getItem("C18_DIRECTOR_ID")) || 9;
-  const DIRECTOR_EMAIL = localStorage.getItem("C18_DIRECTOR_EMAIL") || "diretor1@cofrinho.com";
+  // ======= Diretor Logado =======
+const loggedUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+const DIRECTOR_ID = Number(loggedUser?.id || 0);
+const DIRECTOR_EMAIL = loggedUser?.email || "";
+const DIRECTOR_NAME = loggedUser?.name || "";
+const DIRECTOR_ROLE = loggedUser?.role || "";
+
+useEffect(() => {
+  if (!DIRECTOR_ID || DIRECTOR_ROLE !== "DIRECTOR") {
+    window.location.href = "/login";
+  }
+}, [DIRECTOR_ID, DIRECTOR_ROLE]);
 
   // ===== Navegação =====
   const [tab, setTab] = useState("visao"); // visao | trocas | equipe | unidades | desafios | conta
@@ -164,10 +173,12 @@ const [contaMsg, setContaMsg] = useState("");
   // ===== Carregamento de trocas (banco) =====
   const [isLoadingTrades, setIsLoadingTrades] = useState(false);
 
-  function handleLogout() {
-    localStorage.removeItem("user");
-    window.location.href = "/login";
-  }
+ function handleLogout() {
+  localStorage.removeItem("user");
+  localStorage.removeItem("C18_DIRECTOR_ID");
+  localStorage.removeItem("C18_DIRECTOR_EMAIL");
+  window.location.href = "/login";
+}
 
 
   // ==========================
@@ -184,27 +195,36 @@ const [contaMsg, setContaMsg] = useState("");
         // 1) Unidades
         const unitsRaw = await getUnits();
 
-        // tenta mapear possíveis nomes vindos do backend
         const mappedUnits = (unitsRaw || []).map((u) => ({
-          id: Number(u.id ?? u.Id),
-          nome: String(u.nome ?? u.name ?? u.Name ?? `Unidade ${u.id ?? u.Id}`),
-          directorId: Number(u.directorId ?? u.DirectorId ?? 0),
-        })).filter((u) => Number.isFinite(u.id));
+  id: Number(u.id ?? u.Id),
+  nome: String(u.nome ?? u.name ?? u.Name ?? `Unidade ${u.id ?? u.Id}`),
+  directorId: Number(u.directorId ?? u.DirectorId ?? 0),
+})).filter((u) => Number.isFinite(u.id));
 
-        // filtro por diretor se a API retornar directorId
-        const hasDirectorId = mappedUnits.some((u) => u.directorId > 0);
-        const myUnits = hasDirectorId
-          ? mappedUnits.filter((u) => u.directorId === Number(DIRECTOR_ID))
-          : mappedUnits;
+// pega somente as unidades do diretor logado
+const myUnits = mappedUnits.filter(
+  (u) => Number(u.directorId) === Number(DIRECTOR_ID)
+);
 
         if (!alive) return;
 
-        setUnidades(myUnits);
+setUnidades(myUnits);
 
-        // seleciona unidade inicial
-        const firstUnitId = myUnits[0]?.id || "";
-        setUnidadeSelecionada((prev) => (prev ? prev : firstUnitId));
-        setRankingUnidadeId((prev) => (prev ? prev : firstUnitId));
+// se o diretor não tiver unidade, limpa tudo e sai
+if (myUnits.length === 0) {
+  setUnidadeSelecionada("");
+  setRankingUnidadeId("");
+  setUsuarios([]);
+  setDesafios([]);
+  setTrocas([]);
+  setIsLoading(false);
+  return;
+}
+
+// seleciona unidade inicial
+const firstUnitId = myUnits[0]?.id || "";
+setUnidadeSelecionada((prev) => (prev ? prev : firstUnitId));
+setRankingUnidadeId((prev) => (prev ? prev : firstUnitId));
 
         // 2) Usuários por unidade
         const usersByUnit = await Promise.all(
@@ -1141,6 +1161,11 @@ const trocasFiltradas = useMemo(() => {
             <p className="dash-card-foot">Impacto acumulado da unidade</p>
           </div>
         </section>
+        {!isLoading && unidades.length === 0 && (
+  <div className="dash-alert" style={{ marginBottom: "1rem" }}>
+    Este diretor ainda não possui unidade vinculada. Procure o administrador.
+  </div>
+)}
 
         {/* ===== VISÃO ===== */}
         {tab === "visao" && (

@@ -23,6 +23,10 @@ namespace CofrinhoApi.Controllers
         int DirectorId
     );
 
+    public record ResetDirectorPasswordRequest(
+    string NewPassword
+    );
+
     public record UpdateUnitRequest(
         string Name,
         int DirectorId
@@ -270,6 +274,51 @@ WHERE Id = @Id
                 return Conflict("Já existe um usuário com esse e-mail.");
             }
         }
+
+        // =========================
+// DIRECTORS - RESET PASSWORD
+// =========================
+[HttpPost("directors/{id:int}/reset-password")]
+public async Task<IActionResult> ResetDirectorPassword(int id, [FromBody] ResetDirectorPasswordRequest req)
+{
+    if (id <= 0) return BadRequest("Id inválido.");
+
+    var newPassword = req.NewPassword ?? "";
+
+    if (!IsValidPassword(newPassword))
+        return BadRequest("Senha fraca. Use no mínimo 8 caracteres, com letra e número.");
+
+    var cs = _config.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(cs))
+        return Problem("Connection string 'DefaultConnection' não encontrada.");
+
+    var hasher = new PasswordHasher<PwdUser>();
+    var newHash = hasher.HashPassword(new PwdUser(), newPassword);
+
+    await using var conn = new SqlConnection(cs);
+    await conn.OpenAsync();
+
+    const string sql = @"
+UPDATE dbo.Users
+SET PasswordHash = @PasswordHash
+WHERE Id = @Id
+  AND Role = 'DIRECTOR';
+";
+
+    await using var cmd = new SqlCommand(sql, conn);
+    cmd.Parameters.AddWithValue("@PasswordHash", newHash);
+    cmd.Parameters.AddWithValue("@Id", id);
+
+    var rows = await cmd.ExecuteNonQueryAsync();
+    if (rows == 0)
+        return NotFound("Diretor não encontrado.");
+
+    return Ok(new
+    {
+        Id = id,
+        Message = "Senha redefinida com sucesso."
+    });
+}
 
         // =========================
         // DIRECTORS - DEACTIVATE

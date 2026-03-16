@@ -11,7 +11,8 @@ import {
   updateAdminUnit,
   deactivateAdminUnit,
   getAdminUsers,
-  deactivateAdminUser
+  deactivateAdminUser,
+  resetAdminDirectorPassword
 } from "../api/cofrinhoApi";
 
 // ========= Helpers =========
@@ -113,6 +114,11 @@ export default function AdminDashboard() {
     nome: "",
     diretorId: "",
   });
+
+  const [resetPwdForm, setResetPwdForm] = useState({
+  novaSenha: "",
+  confirmarNovaSenha: "",
+});
 
   // ===== Auditoria visual temporária =====
   const [audit, setAudit] = useState([
@@ -405,6 +411,44 @@ export default function AdminDashboard() {
       alert("Não foi possível desativar o diretor.");
     }
   }
+
+  function requestResetDirectorPassword(directorId) {
+  setResetPwdForm({
+    novaSenha: "",
+    confirmarNovaSenha: "",
+  });
+  setModal({ type: "resetDirectorPassword", directorId });
+}
+
+async function confirmResetDirectorPassword(directorId) {
+  if (!resetPwdForm.novaSenha) {
+    alert("Informe a nova senha.");
+    return;
+  }
+
+  if (resetPwdForm.novaSenha !== resetPwdForm.confirmarNovaSenha) {
+    alert("As senhas não conferem.");
+    return;
+  }
+
+  if (!isValidPasswordBasic(resetPwdForm.novaSenha)) {
+    alert("Senha fraca. Use no mínimo 8 caracteres, com letras e números.");
+    return;
+  }
+
+  try {
+    await resetAdminDirectorPassword(directorId, {
+      newPassword: resetPwdForm.novaSenha
+    });
+
+    setModal(null);
+    logAction(`Senha do diretor redefinida: ${directorId}`);
+    alert("Senha redefinida com sucesso.");
+  } catch (err) {
+    console.error(err);
+    alert("Não foi possível redefinir a senha.");
+  }
+}
 
   // =========================
   // UNIDADES
@@ -780,6 +824,7 @@ export default function AdminDashboard() {
                           <td>
                             <div className="table-actions">
                               <button className="btn-outline btn-xs" onClick={() => requestEditDirector(d.id)}>Editar</button>
+                              <button className="btn-outline btn-xs" onClick={() => requestResetDirectorPassword(d.id)}>Resetar senha</button>
                               <button className="btn-danger btn-xs" onClick={() => handleDeactivateDirector(d.id)}>Desativar</button>
                             </div>
                           </td>
@@ -1026,6 +1071,48 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+
+
+      {/* MODAL TROCAR SENHA */}        
+        {modal?.type === "resetDirectorPassword" && (
+  <div className="modal-backdrop" role="dialog" aria-modal="true">
+    <div className="modal-card">
+      <h3 className="modal-title">Resetar senha do diretor</h3>
+      <p className="modal-text">Defina uma nova senha. O diretor poderá usá-la no próximo login.</p>
+
+      <div className="dash-form">
+        <div className="dash-form-group">
+          <label>Nova senha</label>
+          <input
+            type="password"
+            value={resetPwdForm.novaSenha}
+            onChange={(e) => setResetPwdForm((p) => ({ ...p, novaSenha: e.target.value }))}
+          />
+        </div>
+
+        <div className="dash-form-group">
+          <label>Confirmar nova senha</label>
+          <input
+            type="password"
+            value={resetPwdForm.confirmarNovaSenha}
+            onChange={(e) => setResetPwdForm((p) => ({ ...p, confirmarNovaSenha: e.target.value }))}
+          />
+        </div>
+
+        <div className="dash-hint">
+          Regras: mínimo 8 caracteres, com letras e números.
+        </div>
+      </div>
+
+      <div className="modal-actions">
+        <button className="btn-outline" onClick={() => setModal(null)}>Cancelar</button>
+        <button className="btn-laranja" onClick={() => confirmResetDirectorPassword(modal.directorId)}>
+          Confirmar reset
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* MODAL EDITAR UNIDADE */}
         {modal?.type === "editUnit" && (

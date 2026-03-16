@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import Logo from "../assets/logo.png";
+import { login } from "../api/cofrinhoApi";
 
 function Login() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
-    senha: ""
+    password: ""
   });
 
   const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,35 +23,42 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErro("");
 
     try {
-      const response = await fetch("https://localhost:5001/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+      const data = await login({
+        email: form.email,
+        password: form.password
       });
 
-      if (!response.ok) {
-        alert("E-mail ou senha incorretos.");
-        setLoading(false);
+      // salva usuário logado
+      localStorage.setItem("user", JSON.stringify(data));
+
+      // mantém compatibilidade temporária com o restante do sistema
+      if (data?.role === "DIRECTOR") {
+        localStorage.setItem("C18_DIRECTOR_ID", String(data.id));
+        localStorage.setItem("C18_DIRECTOR_EMAIL", data.email || "");
+        navigate("/diretor");
         return;
       }
 
-      const data = await response.json();
-
-      // Salva o usuário logado
-      localStorage.setItem("usuario", JSON.stringify(data));
-
-      // Redireciona conforme tipo de usuário
-      if (data.role === "Admin") {
+      if (data?.role === "ADMIN") {
         navigate("/admin");
-      } else if (data.role === "Diretor") {
-        navigate("/diretor");
-      } else {
-        navigate("/principal");
+        return;
       }
+
+      setErro("Perfil sem dashboard configurado.");
     } catch (err) {
-      alert("Erro ao conectar com o servidor.");
+      console.error(err);
+      const msg = String(err?.message || "").toLowerCase();
+
+      if (msg.includes("inválido") || msg.includes("incorreto") || msg.includes("unauthorized")) {
+        setErro("E-mail ou senha incorretos.");
+      } else if (msg.includes("inativo")) {
+        setErro("Usuário inativo. Procure o administrador.");
+      } else {
+        setErro("Erro ao conectar com o servidor.");
+      }
     } finally {
       setLoading(false);
     }
@@ -57,12 +66,10 @@ function Login() {
 
   return (
     <div className="login-container">
-      {/* LOGO NO TOPO */}
       <div className="login-logo-area">
         <img src={Logo} alt="Logo Cofrinho" className="login-logo" />
       </div>
 
-      {/* CARD AZUL */}
       <div className="login-card">
         <h1>Bem-vindo de volta</h1>
 
@@ -81,13 +88,19 @@ function Login() {
           <div className="input-group">
             <input
               type="password"
-              name="senha"
+              name="password"
               placeholder="Sua senha"
-              value={form.senha}
+              value={form.password}
               onChange={handleChange}
               required
             />
           </div>
+
+          {erro && (
+            <div className="login-error" style={{ marginBottom: "12px", color: "#b00020", fontSize: "14px" }}>
+              {erro}
+            </div>
+          )}
 
           <div className="lembrar-me">
             <input id="lembrar" type="checkbox" />
