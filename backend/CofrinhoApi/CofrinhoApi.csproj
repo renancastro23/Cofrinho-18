@@ -1,19 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-<<<<<<< HEAD
-    <TargetFramework>net8.0</TargetFramework>
-=======
     <TargetFramework>net10.0</TargetFramework>
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
@@ -22,20 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
-=======
-=======
-    <PackageReference Include="MailKit" Version="4.14.1" />
->>>>>>> e9c7fe9 (MailKit)
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-    <PackageReference Include="MimeKit" Version="4.14.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
->>>>>>> ab5c9e4 (adding MORE IMPORTE FILES)
-=======
-    <PackageReference Include="MailKit" Version="4.14.1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-    <PackageReference Include="MimeKit" Version="4.14.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
->>>>>>> 168028bf464bfe8038dcb9cce353e1e43b8d85b6
+
   </ItemGroup>
 
 </Project>

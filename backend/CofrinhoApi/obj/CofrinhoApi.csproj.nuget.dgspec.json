@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj": {}
+    "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\cofrinhoapi\\CofrinhoApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj": {
+    "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\cofrinhoapi\\CofrinhoApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj",
+        "projectUniqueName": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\cofrinhoapi\\CofrinhoApi.csproj",
         "projectName": "CofrinhoApi",
-        "projectPath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\CofrinhoApi.csproj",
+        "projectPath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\cofrinhoapi\\CofrinhoApi.csproj",
         "packagesPath": "C:\\Users\\gisel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\CofrinhoApi\\obj\\",
+        "outputPath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\cofrinhoapi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\gisel\\AppData\\Roaming\\NuGet\\NuGet.Config"

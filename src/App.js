@@ -7,11 +7,9 @@ import Principal from "./pages/Principal";
 import Sobre from "./pages/Sobre";
 import QuemSomos from "./pages/QuemSomos";
 import EditarPerfil from "./pages/EditarPerfil";
-import Contato from "./pages/Contato";
-import ContatoInstitucional from "./pages/ContatoInstitucional";
+import Contato from "./pages/Contato"; // ← Este já tem ambos os formulários!
 import AdminDashboard from "./pages/AdminDashboard";
 import DirectorDashboard from "./pages/DirectorDashboard";
-
 
 function App() {
   return (
@@ -27,7 +25,10 @@ function App() {
         <Route path="/quemsomos" element={<QuemSomos />} />
         <Route path="/editarperfil" element={<EditarPerfil />} />
         <Route path="/contato" element={<Contato />} />
-        <Route path="/contatoinstitucional" element={<ContatoInstitucional />} />
+        
+        {/* REDIRECIONAMENTO: /contatoinstitucional → /contato */}
+        <Route path="/contatoinstitucional" element={<Contato />} />
+        
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/diretor" element={<DirectorDashboard />} />
 
