@@ -1,12 +1,11 @@
-### Teste Email Institucional
-POST http://localhost:5000/api/institutional
+### Teste Suporte
+POST http://localhost:5000/api/SupUser
 Content-Type: application/json
 
 {
-  "instituicao": "Escola Municipal de Teste",
-  "representante": "João da Silva",
-  "tipo": "Pública",
-  "email": "diretor@escolamunicipal.com",
-  "whatsapp": "(21) 98765-4321",
-  "mensagem": "Olá! Gostaríamos de agendar uma demonstração do Cofrinho dos 18 para nossa escola."
+  "nomeResponsavel": "João Teste",
+  "cpfResponsavel": "12345678900",
+  "nomeCrianca": "Maria Teste",
+  "matricula": "2024001",
+  "mensagem": "Testando o suporte via WhatsApp"
 }

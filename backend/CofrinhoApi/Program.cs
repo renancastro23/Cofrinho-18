@@ -5,18 +5,16 @@ using Microsoft.Extensions.Hosting;
 var builder = WebApplication.CreateBuilder(args);
 
 // ===== CORS =====
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-        policy =>
-        {
-            policy
-                .WithOrigins("http://localhost:3000") // React
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowReact", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 // ===== Serviços =====
@@ -32,14 +30,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    // Em produção: Forçar HTTPS
+    app.UseHttpsRedirection();
+}
 
-app.UseHttpsRedirection();
-
-// CORS antes de Authorization
-app.UseCors(MyAllowSpecificOrigins);
-
+app.UseCors("AllowReact");
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

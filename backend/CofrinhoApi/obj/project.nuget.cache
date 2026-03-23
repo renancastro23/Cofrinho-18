@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NXmP2rNdM5E=",
+  "dgSpecHash": "VcJDVTLx+yA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\cofrinhoapi\\CofrinhoApi.csproj",
+  "projectFilePath": "C:\\Users\\gisel\\OneDrive\\Documentos\\PROJETOS CAIO\\Cofrinho-18\\backend\\cofrinhoApi\\CofrinhoApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gisel\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\gisel\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
