@@ -23,6 +23,14 @@ const Dashboard = () => {
     perfil: false
   });
   
+  // Estado para o sistema de níveis (dados mockados)
+  const [nivel, setNivel] = useState({
+    atual: 3,
+    xpAtual: 5,
+    xpProximo: 10,
+    titulo: "Reciclador Bronze"
+  });
+  
   // Monitora mudanças na foto do usuário
   useEffect(() => {
     const handleFotoChange = (event) => {
@@ -117,6 +125,11 @@ const Dashboard = () => {
     setFotoUsuario(UserService.getFoto());
   };
 
+  // Calcula a porcentagem da barra de progresso
+  const calcularProgresso = () => {
+    return (nivel.xpAtual / nivel.xpProximo) * 100;
+  };
+
   return (
     <div className="container">
       {/* hamburger button for mobile */}
@@ -139,6 +152,26 @@ const Dashboard = () => {
             onClick={() => abrirModal('perfil')}
           />
           <p className="name">Júlia B.</p>
+          
+          {/* SISTEMA DE NÍVEIS */}
+          <div className="nivel-container">
+            <div className="nivel-info">
+              <span className="nivel-numero">Nível {nivel.atual}</span>
+              <span className="nivel-titulo">{nivel.titulo}</span>
+            </div>
+            
+            <div className="progresso-container">
+              <div className="progresso-barra">
+                <div 
+                  className="progresso-preenchido" 
+                  style={{ width: `${calcularProgresso()}%` }}
+                />
+              </div>
+              <div className="progresso-texto">
+                {nivel.xpAtual}/{nivel.xpProximo} XP
+              </div>
+            </div>
+          </div>
         </div>
 
         <nav className="menu">

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CofrinhoApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6429d2c51bb9b1354b9c6299c9f8b485f0ea7d4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c941130229f2837d8edcae27bab95116da3782c1")]
 [assembly: System.Reflection.AssemblyProductAttribute("CofrinhoApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CofrinhoApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
