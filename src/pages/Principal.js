@@ -7,7 +7,7 @@ import ModalPersonalizarPorquinho from './Componets/ModalPersonalizarPorquinho';
 import UserService from '../Services/UserService';
 import '../styles/Principal.css';
 import perfilPadrao from '../assets/principal/perfil.png';
-import porquinho from '../assets/principal/porquinho2d.png'; 
+import porquinho from '../assets/principal/porquinho.png'; 
 import logo from '../assets/principal/logov.png';
 
 const Dashboard = () => {
@@ -23,7 +23,7 @@ const Dashboard = () => {
     perfil: false
   });
   
-  // Estado para o sistema de níveis (dados mockados)
+ 
   const [nivel, setNivel] = useState({
     atual: 3,
     xpAtual: 5,
