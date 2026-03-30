@@ -30,15 +30,15 @@ namespace CofrinhoApi.Controllers
                 await using var conn = new SqlConnection(cs);
                 await conn.OpenAsync();
 
-                // Busca opcional por nome (prefixo/contém)
-                // Usa parâmetros (segurança).
                 var sql = @"
 SELECT
     u.Id,
     u.Name,
-    u.Email
+    u.Email,
+    ISNULL(up.TotalXp, 0) AS TotalXp
 FROM dbo.UserUnits uu
 JOIN dbo.Users u ON u.Id = uu.UserId
+LEFT JOIN dbo.UserProgress up ON up.UserId = u.Id
 WHERE uu.UnitId = @UnitId
   AND uu.IsActive = 1
   AND u.Role = 'USER'
@@ -66,7 +66,8 @@ WHERE uu.UnitId = @UnitId
                     {
                         Id = reader.GetInt32(0),
                         Name = reader.GetString(1),
-                        Email = reader.IsDBNull(2) ? null : reader.GetString(2)
+                        Email = reader.IsDBNull(2) ? null : reader.GetString(2),
+                        TotalXp = reader.IsDBNull(3) ? 0 : reader.GetInt32(3)
                     });
                 }
 

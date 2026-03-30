@@ -23,68 +23,61 @@ namespace CofrinhoApi.Controllers
             _config = config;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateTradeRequest req)
-        {
-            // Validações básicas
-            if (req.DirectorId <= 0 || req.UnitId <= 0 || req.UserId <= 0)
-                return BadRequest("DirectorId, UnitId e UserId devem ser > 0.");
+       [HttpPost]
+public async Task<IActionResult> Create([FromBody] CreateTradeRequest req)
+{
+    if (req.DirectorId <= 0 || req.UnitId <= 0 || req.UserId <= 0)
+        return BadRequest("DirectorId, UnitId e UserId devem ser > 0.");
 
-            if (string.IsNullOrWhiteSpace(req.MaterialType))
-                return BadRequest("MaterialType é obrigatório.");
+    if (string.IsNullOrWhiteSpace(req.MaterialType))
+        return BadRequest("MaterialType é obrigatório.");
 
-            if (req.WeightKg <= 0)
-                return BadRequest("WeightKg deve ser > 0.");
+    if (req.WeightKg <= 0)
+        return BadRequest("WeightKg deve ser > 0.");
 
-            if (req.AmountMoney < 0)
-                return BadRequest("AmountMoney não pode ser negativo.");
+    if (req.AmountMoney < 0)
+        return BadRequest("AmountMoney não pode ser negativo.");
 
-            var cs = _config.GetConnectionString("DefaultConnection");
-            if (string.IsNullOrWhiteSpace(cs))
-                return Problem("Connection string 'DefaultConnection' não encontrada.");
+    var cs = _config.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(cs))
+        return Problem("Connection string 'DefaultConnection' não encontrada.");
 
-            await using var conn = new SqlConnection(cs);
-            await conn.OpenAsync();
+    await using var conn = new SqlConnection(cs);
+    await conn.OpenAsync();
 
-            // 1) Verificar se a unidade pertence ao diretor
-            // Ajuste nomes se sua tabela Units tiver colunas diferentes (UnitId/DirectorId).
-            const string sqlCheckUnitOwner = @"
+    const string sqlCheckUnitOwner = @"
 SELECT COUNT(1)
 FROM dbo.Units
 WHERE Id = @UnitId AND DirectorId = @DirectorId;
 ";
 
-            await using (var cmd = new SqlCommand(sqlCheckUnitOwner, conn))
-            {
-                cmd.Parameters.AddWithValue("@UnitId", req.UnitId);
-                cmd.Parameters.AddWithValue("@DirectorId", req.DirectorId);
+    await using (var cmd = new SqlCommand(sqlCheckUnitOwner, conn))
+    {
+        cmd.Parameters.AddWithValue("@UnitId", req.UnitId);
+        cmd.Parameters.AddWithValue("@DirectorId", req.DirectorId);
 
-                var ok = (int)await cmd.ExecuteScalarAsync();
-                if (ok == 0)
-                    return Forbid("Essa unidade não pertence a esse diretor.");
-            }
+        var ok = (int)await cmd.ExecuteScalarAsync();
+        if (ok == 0)
+            return Forbid("Essa unidade não pertence a esse diretor.");
+    }
 
-            // 2) Verificar se o usuário pertence à unidade
-            // Ajuste nomes se sua tabela UserUnits tiver outras colunas.
-            const string sqlCheckUserInUnit = @"
+    const string sqlCheckUserInUnit = @"
 SELECT COUNT(1)
 FROM dbo.UserUnits
 WHERE UnitId = @UnitId AND UserId = @UserId AND IsActive = 1;
 ";
 
-            await using (var cmd = new SqlCommand(sqlCheckUserInUnit, conn))
-            {
-                cmd.Parameters.AddWithValue("@UnitId", req.UnitId);
-                cmd.Parameters.AddWithValue("@UserId", req.UserId);
+    await using (var cmd = new SqlCommand(sqlCheckUserInUnit, conn))
+    {
+        cmd.Parameters.AddWithValue("@UnitId", req.UnitId);
+        cmd.Parameters.AddWithValue("@UserId", req.UserId);
 
-                var ok = (int)await cmd.ExecuteScalarAsync();
-                if (ok == 0)
-                    return BadRequest("Esse usuário não está vinculado a essa unidade (ou está inativo).");
-            }
+        var ok = (int)await cmd.ExecuteScalarAsync();
+        if (ok == 0)
+            return BadRequest("Esse usuário não está vinculado a essa unidade (ou está inativo).");
+    }
 
-            // 3) Inserir a troca
-            // IMPORTANTE: ajuste nomes de colunas conforme seu dbo.Trades.
-            const string sqlInsertTrade = @"
+    const string sqlInsertTrade = @"
 INSERT INTO dbo.Trades
 (
     UserId,
@@ -107,30 +100,56 @@ VALUES
 SELECT SCOPE_IDENTITY();
 ";
 
-            decimal newId;
-            await using (var cmd = new SqlCommand(sqlInsertTrade, conn))
-            {
-                cmd.Parameters.AddWithValue("@UserId", req.UserId);
-                cmd.Parameters.AddWithValue("@MaterialType", req.MaterialType.Trim());
-                cmd.Parameters.AddWithValue("@WeightKg", req.WeightKg);
-                cmd.Parameters.AddWithValue("@AmountMoney", req.AmountMoney);
-                cmd.Parameters.AddWithValue("@DirectorId", req.DirectorId);
+    decimal newId;
+    int gainedXp = (int)Math.Floor(req.AmountMoney / 0.20m);
 
-                var result = await cmd.ExecuteScalarAsync();
-                newId = Convert.ToDecimal(result);
-            }
+    await using (var cmd = new SqlCommand(sqlInsertTrade, conn))
+    {
+        cmd.Parameters.AddWithValue("@UserId", req.UserId);
+        cmd.Parameters.AddWithValue("@MaterialType", req.MaterialType.Trim());
+        cmd.Parameters.AddWithValue("@WeightKg", req.WeightKg);
+        cmd.Parameters.AddWithValue("@AmountMoney", req.AmountMoney);
+        cmd.Parameters.AddWithValue("@DirectorId", req.DirectorId);
 
-            return Ok(new
-            {
-                TradeId = newId,
-                req.DirectorId,
-                req.UnitId,
-                req.UserId,
-                req.MaterialType,
-                req.WeightKg,
-                req.AmountMoney,
-                CreatedAt = DateTime.Now
-            });
-        }
+        var result = await cmd.ExecuteScalarAsync();
+        newId = Convert.ToDecimal(result);
     }
+
+    const string sqlUpdateProgress = @"
+IF EXISTS (SELECT 1 FROM dbo.UserProgress WHERE UserId = @UserId)
+BEGIN
+    UPDATE dbo.UserProgress
+    SET TotalXp = TotalXp + @Xp,
+        UpdatedAt = GETDATE()
+    WHERE UserId = @UserId;
+END
+ELSE
+BEGIN
+    INSERT INTO dbo.UserProgress (UserId, TotalXp, Level, UpdatedAt)
+    VALUES (@UserId, @Xp, 1, GETDATE());
+END
+";
+
+    await using (var cmdProgress = new SqlCommand(sqlUpdateProgress, conn))
+    {
+        cmdProgress.Parameters.AddWithValue("@UserId", req.UserId);
+        cmdProgress.Parameters.AddWithValue("@Xp", gainedXp);
+
+        await cmdProgress.ExecuteNonQueryAsync();
+    }
+
+    return Ok(new
+    {
+        TradeId = newId,
+        req.DirectorId,
+        req.UnitId,
+        req.UserId,
+        req.MaterialType,
+        req.WeightKg,
+        req.AmountMoney,
+        GainedXp = gainedXp,
+        CreatedAt = DateTime.Now
+    });
+}
+}
 }

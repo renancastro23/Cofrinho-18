@@ -249,16 +249,17 @@ setRankingUnidadeId((prev) => (prev ? prev : firstUnitId));
               role === "ADMIN" ? "Admin" : role;
 
             mapUsers.set(id, {
-              id,
-              nome: String(ur.name ?? ur.nome ?? ur.Name ?? "Sem nome"),
-              tipo,
-              unidadeId: un.id,
-              unidadeNome: un.nome,
-              email: String(ur.email ?? ur.Email ?? ""),
-              materiaisKg: 0,
-              valorTotal: 0,
-              trocas: 0,
-            });
+               id,
+                nome: String(ur.name ?? ur.nome ?? ur.Name ?? "Sem nome"),
+                tipo,
+                unidadeId: un.id,
+                unidadeNome: un.nome,
+                email: String(ur.email ?? ur.Email ?? ""),
+                totalXp: Number(ur.totalXp ?? ur.TotalXp ?? 0),
+                materiaisKg: 0,
+                valorTotal: 0,
+                trocas: 0,
+                });
           }
         }
 
@@ -661,15 +662,16 @@ function handleCriarUsuario(e) {
           const rk = mapRank.get(id) || { materiaisKg: 0, valorTotal: 0, trocas: 0 };
 
           return {
-            id,
-            nome: String(ur.name ?? ur.nome ?? ur.Name ?? "Sem nome"),
-            tipo: (tipo === "USER" ? "Usuário" : tipo),
-            unidadeId: unidade.id,
-            unidadeNome: unidade.nome,
-            email: String(ur.email ?? ur.Email ?? ""),
-            materiaisKg: rk.materiaisKg,
-            valorTotal: rk.valorTotal,
-            trocas: rk.trocas,
+          id,
+          nome: String(ur.name ?? ur.nome ?? ur.Name ?? "Sem nome"),
+          tipo: (tipo === "USER" ? "Usuário" : tipo),
+          unidadeId: unidade.id,
+          unidadeNome: unidade.nome,
+          email: String(ur.email ?? ur.Email ?? ""),
+          totalXp: Number(ur.totalXp ?? ur.TotalXp ?? 0),
+          materiaisKg: rk.materiaisKg,
+          valorTotal: rk.valorTotal,
+          trocas: rk.trocas,
           };
         });
 
@@ -1013,20 +1015,22 @@ async function handleAlterarSenhaConta(e) {
 
     const material = novaTroca.material || "Outro";
 
-    try {
+    let tradeResponse = null;
+
+      try {
       setIsSubmittingTrade(true);
       setApiError("");
 
-      await createTrade({
-        directorId: DIRECTOR_ID,
-        unitId: selectedUser.unidadeId,
-        userId: selectedUser.id,
-        materialType: material,
-        weightKg: pesoKg,
-        amountMoney: valor,
-        obs: (novaTroca.obs || "").trim(),
+      tradeResponse = await createTrade({
+      directorId: DIRECTOR_ID,
+      unitId: selectedUser.unidadeId,
+      userId: selectedUser.id,
+      materialType: material,
+      weightKg: pesoKg,
+      amountMoney: valor,
+      obs: (novaTroca.obs || "").trim(),
       });
-    } catch (err) {
+      } catch (err) {
       console.error(err);
       setIsSubmittingTrade(false);
       alert("Não foi possível registrar a troca no servidor. Verifique a API e tente novamente.");
@@ -1037,19 +1041,25 @@ async function handleAlterarSenhaConta(e) {
 
    
     // Atualiza métricas localmente
+    const gainedXp = Number(tradeResponse?.gainedXp ?? tradeResponse?.GainedXp ?? 0);
+
     setUsuarios((prev) =>
-      prev.map((u) => {
-        if (u.id !== selectedUser.id) return u;
-        return {
-          ...u,
-          materiaisKg: (u.materiaisKg || 0) + pesoKg,
-          valorTotal: (u.valorTotal || 0) + valor,
-          trocas: (u.trocas || 0) + 1,
-        };
-      })
-    );
+    prev.map((u) => {
+    if (u.id !== selectedUser.id) return u;
+    return {
+      ...u,
+      totalXp: (u.totalXp || 0) + gainedXp,
+      materiaisKg: (u.materiaisKg || 0) + pesoKg,
+      valorTotal: (u.valorTotal || 0) + valor,
+      trocas: (u.trocas || 0) + 1,
+    };
+  })
+);
 
     setNovaTroca({ material: "Plástico", pesoKg: "", valorR$: "", obs: "" });
+    if (gainedXp > 0) {
+  alert(`Troca registrada com sucesso! +${gainedXp} XP`);
+}
 
     // Recarrega histórico do banco (sem mexer no layout)
     // Recarrega histórico do banco (sempre)
@@ -1263,26 +1273,26 @@ const trocasFiltradas = useMemo(() => {
                 <table className="dash-table">
                   <thead>
                     <tr>
-                      <th>Nome</th>
-                      <th>Unidade</th>
-                      <th>Nível</th>
-                      <th>Material (kg)</th>
-                      <th>Valor (R$)</th>
-                      <th>Trocas</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Unidade</th>
+                    <th>XP</th>
+                    <th>Kg</th>
+                    <th>R$</th>
                     </tr>
                   </thead>
                   <tbody>
                     {ranking.map((u) => (
                       <tr key={u.id}>
-                        <td>{u.nome}</td>
-                        <td>{u.unidadeNome}</td>
-                        <td><span className="pill">Nível {u.nivel}</span></td>
-                        <td>{(u.materiaisKg || 0).toFixed(2)}</td>
-                        <td>R$ {(u.valorTotal || 0).toFixed(2)}</td>
-                        <td>{u.trocas || 0}</td>
-                      </tr>
+  <td>{u.nome}</td>
+  <td>{u.email}</td>
+  <td>{u.unidadeNome}</td>
+  <td>{u.totalXp || 0}</td>
+  <td>{(u.materiaisKg || 0).toFixed(2)}</td>
+  <td>R$ {(u.valorTotal || 0).toFixed(2)}</td>
+</tr>
                     ))}
-                    {ranking.length === 0 && <tr><td colSpan="6">Sem dados no momento.</td></tr>}
+                    {ranking.length === 0 && <tr><td colSpan="7">Sem dados no momento.</td></tr>}
                   </tbody>
                 </table>
               </div>
@@ -1542,31 +1552,31 @@ const trocasFiltradas = useMemo(() => {
         <table className="dash-table">
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>E-mail</th>
-              <th>Unidade</th>
-              <th>Kg</th>
-              <th>R$</th>
-              <th>Trocas</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Unidade</th>
+            <th>XP</th>
+            <th>Kg</th>
+            <th>R$</th>
             </tr>
           </thead>
           <tbody>
             {usuariosFiltrados.map((u) => (
               <tr
-                key={u.id}
-                onClick={() => handleSelecionarUsuarioEquipe(u)}
-                style={{
-                  cursor: "pointer",
-                  background: usuarioSelecionado?.id === u.id ? "rgba(0,0,0,0.03)" : "transparent"
-                }}
-              >
-                <td>{u.nome}</td>
-                <td>{u.email || "-"}</td>
-                <td>{u.unidadeNome}</td>
-                <td>{Number(u.materiaisKg || 0).toFixed(2)}</td>
-                <td>R$ {Number(u.valorTotal || 0).toFixed(2)}</td>
-                <td>{u.trocas || 0}</td>
-              </tr>
+  key={u.id}
+  onClick={() => handleSelecionarUsuarioEquipe(u)}
+  style={{
+    cursor: "pointer",
+    background: usuarioSelecionado?.id === u.id ? "rgba(0,0,0,0.03)" : "transparent"
+  }}
+>
+  <td>{u.nome}</td>
+  <td>{u.email || "-"}</td>
+  <td>{u.unidadeNome}</td>
+  <td>{u.totalXp || 0}</td>
+  <td>{Number(u.materiaisKg || 0).toFixed(2)}</td>
+  <td>R$ {Number(u.valorTotal || 0).toFixed(2)}</td>
+</tr>
             ))}
             {usuariosFiltrados.length === 0 && (
               <tr><td colSpan="6">Nenhum usuário encontrado.</td></tr>
@@ -1627,6 +1637,11 @@ const trocasFiltradas = useMemo(() => {
           <p className="dash-section-subtitle">
             Unidade: <strong>{usuarioSelecionado.unidadeNome}</strong>
           </p>
+
+          <div className="dash-card">
+  <span className="dash-card-label">XP</span>
+  <strong className="dash-card-number">{usuarioSelecionado.totalXp || 0}</strong>
+</div>
 
           <div style={{ display: "grid", gap: 10, marginBottom: 12 }}>
             <div className="dash-card">
