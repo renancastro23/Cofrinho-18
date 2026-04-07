@@ -47,6 +47,11 @@ function Login() {
         return;
       }
 
+      if (data?.role === "USER") {
+      navigate("/principal");
+      return;
+      }
+
       setErro("Perfil sem dashboard configurado.");
     } catch (err) {
       console.error(err);

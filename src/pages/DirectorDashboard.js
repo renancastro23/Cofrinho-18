@@ -1194,8 +1194,6 @@ const trocasFiltradas = useMemo(() => {
     <label>Tipo</label>
     <select name="tipo" value={novoUsuario.tipo} onChange={handleChangeUsuario}>
       <option value="Usuário">Usuário</option>
-      <option value="Professor">Professor</option>
-      <option value="Auxiliar">Auxiliar</option>
     </select>
   </div>
 
