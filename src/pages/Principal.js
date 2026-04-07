@@ -7,13 +7,60 @@ import ModalPersonalizarPorquinho from './Componets/ModalPersonalizarPorquinho';
 import UserService from '../Services/UserService';
 import '../styles/Principal.css';
 import perfilPadrao from '../assets/principal/perfil.png';
-import porquinho from '../assets/principal/porquinho.png'; 
+import porquinhoBase from '../assets/principal/porquinho.png'; 
 import logo from '../assets/principal/logov.png';
+
+// Import das roupas para aplicar no dashboard principal
+import bonezinho from '../assets/roupasporquinho/Cabeça/bonezinho.png';
+import chapeuaniversario from '../assets/roupasporquinho/Cabeça/chapeuaniversario.png';
+import chapeupalhaco from '../assets/roupasporquinho/Cabeça/chapeupalhaco.png';
+import chapeuverde from '../assets/roupasporquinho/Cabeça/chapeuverde.png';
+
+import camisabege from '../assets/roupasporquinho/Torso/camisabege.png';
+import camisalaranja from '../assets/roupasporquinho/Torso/camisalaranja.png';
+import camisaverde from '../assets/roupasporquinho/Torso/camisaverde.png';
+import camisavermelha from '../assets/roupasporquinho/Torso/camisavermelha.png';
+import jardineira from '../assets/roupasporquinho/Torso/jardineira.png';
+
+import shortazul from '../assets/roupasporquinho/Cintura/shortazul.png';
+import shortbolinha from '../assets/roupasporquinho/Cintura/shortbolinha.png';
+import shortlaranja from '../assets/roupasporquinho/Cintura/shortlaranja.png';
+import shortmarrom from '../assets/roupasporquinho/Cintura/shortmarrom.png';
+import shortpreto from '../assets/roupasporquinho/Cintura/shortpreto.png';
+
+import tenisazul from '../assets/roupasporquinho/Pés/tenisazul.png';
+import tenisdepalhaco from '../assets/roupasporquinho/Pés/tenisdepalhaco.png';
+import tenismarrom from '../assets/roupasporquinho/Pés/tenismarrom.png';
+import tenispreto from '../assets/roupasporquinho/Pés/tenispreto.png';
+import tenisverde from '../assets/roupasporquinho/Pés/tenisverde.png';
 
 const Dashboard = () => {
   const [active, setActive] = useState("Home");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fotoUsuario, setFotoUsuario] = useState(UserService.getFoto());
+  
+  // Estado das roupas selecionadas para o porquinho
+  const [roupasSelecionadas, setRoupasSelecionadas] = useState({
+    cabeca: null,
+    tronco: null,
+    cintura: null,
+    pes: null
+  });
+  
+  // Mapeamento de imagens para exibição
+  const imagensPorId = {
+    bonezinho, chapeuaniversario, chapeupalhaco, chapeuverde,
+    camisabege, camisalaranja, camisaverde, camisavermelha, jardineira,
+    shortazul, shortbolinha, shortlaranja, shortmarrom, shortpreto,
+    tenisazul, tenisdepalhaco, tenismarrom, tenispreto, tenisverde
+  };
+  
+  // Função para obter a imagem com base no ID
+  const getImagemSelecionada = (categoria) => {
+    const id = roupasSelecionadas[categoria];
+    if (!id) return null;
+    return imagensPorId[id];
+  };
   
   // Estado para controlar os modais
   const [modalAberto, setModalAberto] = useState({
@@ -23,7 +70,6 @@ const Dashboard = () => {
     perfil: false
   });
   
- 
   const [nivel, setNivel] = useState({
     atual: 3,
     xpAtual: 5,
@@ -99,7 +145,6 @@ const Dashboard = () => {
   const handleClick = (menu) => {
     setActive(menu);
     
-    // Mapeia os nomes dos botões para as chaves do modal
     const modalMap = {
       'Home': 'home',
       'Lançamentos': 'lancamentos',
@@ -111,28 +156,31 @@ const Dashboard = () => {
       abrirModal(modalKey);
     }
     
-    setSidebarOpen(false); // Fecha sidebar no mobile
+    setSidebarOpen(false);
   };
 
   const showReward = () => {
     alert("🎁 Parabéns! Você desbloqueou a recompensa do Porquinho de Ouro!");
   };
 
-  // Função para quando o modal de perfil fecha
   const handlePerfilModalClose = () => {
     fecharModal();
-    // Atualiza a foto imediatamente após fechar o modal
     setFotoUsuario(UserService.getFoto());
   };
 
-  // Calcula a porcentagem da barra de progresso
   const calcularProgresso = () => {
     return (nivel.xpAtual / nivel.xpProximo) * 100;
   };
 
+  const previewItens = {
+    tronco: getImagemSelecionada('tronco'),
+    cintura: getImagemSelecionada('cintura'),
+    cabeca: getImagemSelecionada('cabeca'),
+    pes: getImagemSelecionada('pes')
+  };
+
   return (
     <div className="container">
-      {/* hamburger button for mobile */}
       <button 
         className="hamburger" 
         aria-label="Abrir menu" 
@@ -141,7 +189,6 @@ const Dashboard = () => {
         <span className="bar" />
       </button>
       
-      {/* Sidebar (integrado) */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="profile">
           <img 
@@ -153,7 +200,6 @@ const Dashboard = () => {
           />
           <p className="name">Júlia B.</p>
           
-          {/* SISTEMA DE NÍVEIS */}
           <div className="nivel-container">
             <div className="nivel-info">
               <span className="nivel-numero">Nível {nivel.atual}</span>
@@ -201,7 +247,6 @@ const Dashboard = () => {
         </div>
       </aside>
 
-      {/* backdrop for mobile when sidebar is open */}
       {sidebarOpen && (
         <div 
           className="sidebar-backdrop" 
@@ -209,14 +254,39 @@ const Dashboard = () => {
         />
       )}
 
-      {/* Centro - Dashboard principal */}
       <main className="dashboard">
         <div className="header">
           <img src={logo} alt="cofrinho18" className="logo" />
         </div>
 
         <div className="piggy-container">
-          <img src={porquinho} alt="Porquinho" className="piggy" />
+          <div className="porquinho-principal">
+            <div className="porquinho-layers-principal">
+              {/* CAMADA BASE */}
+              <img src={porquinhoBase} alt="Porquinho" className="porquinho-principal-base" />
+              
+              {/* CAMADA DO TRONCO */}
+              {previewItens.tronco && (
+                <img src={previewItens.tronco} alt="Tronco" className="porquinho-principal-layer tronco-layer-principal" />
+              )}
+              
+              {/* CAMADA DA CINTURA */}
+              {previewItens.cintura && (
+                <img src={previewItens.cintura} alt="Cintura" className="porquinho-principal-layer cintura-layer-principal" />
+              )}
+              
+              {/* CAMADA DA CABEÇA */}
+              {previewItens.cabeca && (
+                <img src={previewItens.cabeca} alt="Cabeça" className="porquinho-principal-layer cabeca-layer-principal" />
+              )}
+              
+              {/* CAMADA DOS PÉS */}
+              {previewItens.pes && (
+                <img src={previewItens.pes} alt="Pés" className="porquinho-principal-layer pes-layer-principal" />
+              )}
+            </div>
+          </div>
+          
           <div className="balance-card">
             <p>Saldo atual para reciclagem:</p>
             <h2>R$ 1.458,75</h2>
@@ -224,7 +294,6 @@ const Dashboard = () => {
         </div>
       </main>
 
-      {/* Right panel (integrado) */}
       <section className="right-panel">
         {desafios.map((d) => (
           <div key={d.id} className={`card ${d.cor}`}>
@@ -241,7 +310,6 @@ const Dashboard = () => {
         ))}
       </section>
 
-      {/* MODAIS */}
       <Modal 
         isOpen={modalAberto.home}
         onClose={fecharModal}
@@ -263,7 +331,10 @@ const Dashboard = () => {
         onClose={fecharModal}
         title="🎨 Personalizar Porquinho"
       >
-        <ModalPersonalizarPorquinho />
+        <ModalPersonalizarPorquinho 
+          roupasSelecionadas={roupasSelecionadas}
+          setRoupasSelecionadas={setRoupasSelecionadas}
+        />
       </Modal>
 
       <Modal 

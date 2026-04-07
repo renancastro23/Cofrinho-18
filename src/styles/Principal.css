@@ -228,10 +228,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   box-sizing: border-box;
   width: 100%;
   max-width: calc(100vw - var(--sidebar-width) - var(--right-panel-width));
-  min-width: 0; /* Permite que o flex shrink funcione */
+  min-width: 0;
 }
 
 /* header and logo sizing */
@@ -256,34 +257,74 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: auto;
+  justify-content: center;
   box-sizing: border-box;
   width: 100%;
+  margin: 1rem 0;
 }
 
-.piggy {
-  width: 300px;
-  height: auto;
-  margin-bottom: 1rem;
-  max-width: 100%;
+/* ===== PORQUINHO PRINCIPAL COM SOBREPOSIÇÃO - AUMENTADO ===== */
+.porquinho-principal {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
+
+.porquinho-layers-principal {
+  position: relative;
+  width: 500px; /* Aumentado de 400px para 500px */
+  display: flex;
+  justify-content: center;
+}
+
+.porquinho-principal-base {
+  width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.porquinho-principal-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+/* Z-INDEX para a ordem correta de sobreposição */
+.tronco-layer-principal { z-index: 2; }
+.cintura-layer-principal { z-index: 3; }
+.cabeca-layer-principal { z-index: 4; }
+.pes-layer-principal { z-index: 5; }
 
 .balance-card {
   background-color: var(--orange);
   color: white;
-  padding: 0.8rem 1.5rem;
+  padding: 1rem 2rem;
   border-radius: var(--radius);
   text-align: center;
   box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
   box-sizing: border-box;
   width: auto;
+  min-width: 280px;
   max-width: 100%;
   word-break: break-word;
+  margin-top: 0.5rem;
+}
+
+.balance-card p {
+  margin: 0;
+  font-size: 1rem;
 }
 
 .balance-card h2 {
   margin: 0.5rem 0 0;
-  font-size: 1.8rem;
+  font-size: 2rem;
   line-height: 1.2;
   word-break: break-word;
 }
@@ -469,15 +510,13 @@ body {
     z-index: 45; 
   }
 
-  .piggy {
-    width: 200px;
-    max-width: 80%;
+  .porquinho-layers-principal {
+    width: 380px; /* Tablet: 300px */
   }
 
   .balance-card {
-    padding: 0.7rem 1.2rem;
-    width: 90%;
-    max-width: 300px;
+    padding: 0.8rem 1.5rem;
+    min-width: 240px;
   }
 
   .balance-card h2 {
@@ -486,15 +525,20 @@ body {
 }
 
 @media (max-width: 768px) {
-  .piggy {
-    width: 160px;
+  .porquinho-layers-principal {
+    width: 280px; /* Mobile: 240px */
   }
 
   .balance-card {
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1.2rem;
+    min-width: 200px;
   }
 
   .balance-card h2 {
     font-size: 1.4rem;
+  }
+  
+  .balance-card p {
+    font-size: 0.9rem;
   }
 }
