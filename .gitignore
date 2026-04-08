@@ -25,16 +25,3 @@ backend/CofrinhoApi/bin/
 backend/CofrinhoApi/obj/
 *.dll
 *.exe
-
-## Pastas de compilação e cache do .NET
-**/bin/
-**/obj/
-**/Debug/
-**/Release/
-
-## Arquivos binários e gerados automaticamente
-*.dll
-*.exe
-*.pdb
-*.deps.json
-*.runtimeconfig.json
