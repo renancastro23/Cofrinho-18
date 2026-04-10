@@ -1,3 +1,12 @@
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.csproj.AssemblyReference.cache
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.AssemblyInfoInputs.cache
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.AssemblyInfo.cs
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.csproj.CoreCompileInputs.cache
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.sourcelink.json
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\appsettings.json
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\CofrinhoApi.staticwebassets.endpoints.json
@@ -8,9 +17,7 @@ C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\n
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\CofrinhoApi.pdb
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Azure.Identity.dll
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Humanizer.dll
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\MailKit.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
@@ -35,7 +42,6 @@ C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\n
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\MimeKit.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Mono.TextTemplating.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
@@ -51,7 +57,6 @@ C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\n
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\System.Memory.Data.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\System.Runtime.Caching.dll
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\System.Security.Permissions.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\System.Windows.Extensions.dll
@@ -117,18 +122,8 @@ C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\n
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.csproj.AssemblyReference.cache
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\rpswa.dswa.cache.json
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.AssemblyInfoInputs.cache
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.AssemblyInfo.cs
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.csproj.CoreCompileInputs.cache
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\CofrinhoApi.sourcelink.json
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\renan\Documents\Cofrinho 18\Cofrinho-18\backend\CofrinhoApi\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json

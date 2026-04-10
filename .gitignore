@@ -25,3 +25,16 @@ backend/CofrinhoApi/bin/
 backend/CofrinhoApi/obj/
 *.dll
 *.exe
+
+## Ignorar pastas de compilação do .NET
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+
+## Ignorar arquivos gerados
+*.dll
+*.exe
+*.pdb
+*.deps.json
+*.runtimeconfig.json
