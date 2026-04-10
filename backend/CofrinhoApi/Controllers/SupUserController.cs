@@ -37,8 +37,8 @@ namespace CofrinhoApi.Controllers
 
         private string GenerateWhatsAppUrl(string message)
 {
-    // Número CORRETO (sem espaços ou caracteres especiais)
-    string phoneNumber = "5521978968470"; // ← CORRIGIDO
+    
+    string phoneNumber = "5521974484430"; 
     
     // Codifica a mensagem para URL
     string encodedMessage = Uri.EscapeDataString(message);

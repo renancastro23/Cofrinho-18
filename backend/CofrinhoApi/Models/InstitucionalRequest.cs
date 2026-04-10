@@ -1,7 +1,6 @@
-// Models/InstitutionalRequest.cs
 namespace CofrinhoApi.Models
 {
-    public class InstitutionalEmailRequest
+    public class InstitucionalRequest
     {
         public required string Instituicao { get; set; }
         public required string Representante { get; set; }

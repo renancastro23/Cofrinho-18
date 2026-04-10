@@ -34,71 +34,93 @@ function Contato() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  if (tipoContato === "institucional") {
-    // FORMULÁRIO INSTITUCIONAL - Backend automático
-    try {
-      const response = await fetch('http://localhost:5000/api/institutional', {
-        method: 'POST',
-        headers: {  
-          'Content-Type': 'application/json',
-        },  
-        body: JSON.stringify(formInstitucional)
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        alert("Email enviado com sucesso! Entraremos em contato em breve.");
-        setFormInstitucional({ 
-          instituicao: "", 
-          representante: "", 
-          tipo: "", 
-          email: "", 
-          whatsapp: "", 
-          mensagem: "" 
-        });
-      } else {
-        alert("Erro ao enviar email: " + data.message);
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert("Erro ao conectar com o servidor");
-    }
+    e.preventDefault();
     
-  } else {
-    // FORMULÁRIO SUPORTE - WhatsApp (JÁ FUNCIONA)
-    try {
-      const response = await fetch('http://localhost:5000/api/SupUser', {
-        method: 'POST',
-        headers: {  
-          'Content-Type': 'application/json',
-        },  
-        body: JSON.stringify(formSuporte)
-      });
+    if (tipoContato === "institucional") {
+  // FORMULÁRIO INSTITUCIONAL - WhatsApp
+  console.log("📤 Enviando dados institucionais:", formInstitucional);
+  
+  try {
+    // URL CORRETA: AGORA USA O NOVO CONTROLLER
+    const response = await fetch('http://localhost:5000/api/Institucional', {
+      method: 'POST',
+      headers: {  
+        'Content-Type': 'application/json',
+      },  
+      body: JSON.stringify(formInstitucional)
+    });
 
-      const data = await response.json();
-      
-      if (data.success) {
-        window.open(data.whatsappUrl, '_blank');
-        alert("Redirecionando para WhatsApp...");
-        setFormSuporte({ 
-          nomeResponsavel: "", 
-          cpfResponsavel: "", 
-          nomeCrianca: "", 
-          matricula: "", 
-          mensagem: "" 
-        });
-      } else {
-        alert("Erro ao preparar mensagem para WhatsApp");
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert("Erro ao conectar com o servidor");
+    console.log("📥 Status da resposta:", response.status);
+    console.log("📥 Headers:", response.headers);
+
+    const data = await response.json();
+    console.log("📥 Dados recebidos:", data);
+    
+    if (data.success) {
+      // ABRE O WHATSAPP EM VEZ DO EMAIL
+      window.open(data.whatsappUrl, '_blank');
+      alert("Redirecionando para WhatsApp...");
+      setFormInstitucional({ 
+        instituicao: "", 
+        representante: "", 
+        tipo: "", 
+        email: "", 
+        whatsapp: "", 
+        mensagem: "" 
+      });
+    } else {
+      alert("Erro ao preparar mensagem para WhatsApp: " + data.message);
     }
+  } catch (error) {
+    console.error("❌ ERRO COMPLETO:", error);
+    console.error("❌ Mensagem:", error.message);
+    console.error("❌ Nome:", error.name);
+    alert(`Erro ao conectar com o servidor: ${error.message}`);
   }
-};
+}
+      
+   else {
+      // FORMULÁRIO SUPORTE - WhatsApp
+      console.log("📤 Enviando dados de suporte:", formSuporte);
+      
+      try {
+        // URL CORRETA: USANDO HTTP (não HTTPS)
+        const response = await fetch('http://localhost:5000/api/SupUser', {
+          method: 'POST',
+          headers: {  
+            'Content-Type': 'application/json',
+          },  
+          body: JSON.stringify(formSuporte)
+        });
+
+        console.log("📥 Status da resposta:", response.status);
+        
+        const data = await response.json();
+        console.log("📥 Dados recebidos:", data);
+        
+        if (data.success) {
+          console.log("🔗 Abrindo WhatsApp:", data.whatsappUrl);
+          window.open(data.whatsappUrl, '_blank');
+          alert("Redirecionando para WhatsApp...");
+          setFormSuporte({ 
+            nomeResponsavel: "", 
+            cpfResponsavel: "", 
+            nomeCrianca: "", 
+            matricula: "", 
+            mensagem: "" 
+          });
+        } else {
+          alert("Erro ao preparar mensagem para WhatsApp");
+        }
+      } catch (error) {
+        console.error("❌ ERRO COMPLETO:", error);
+        console.error("❌ Mensagem:", error.message);
+        console.error("❌ Nome:", error.name);
+        alert(`Erro ao conectar com o servidor: ${error.message}`);
+      }
+    }
+  };
+
   return (
     <div className="contato-container">
       {/* LOGO */}
